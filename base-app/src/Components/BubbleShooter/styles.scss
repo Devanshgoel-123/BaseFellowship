@@ -1,0 +1,29 @@
+.bubble-shooter-container {
+  min-height: 100vh;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.game-wrapper {
+  width: 100%;
+  max-width: 320px;
+  padding: 0 16px;
+}
+
+/* Tablet styles */
+@media (min-width: 768px) {
+  .game-wrapper {
+    max-width: 600px;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .game-wrapper {
+    max-width: 800px;
+  }
+}

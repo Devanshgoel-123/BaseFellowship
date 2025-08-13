@@ -1,0 +1,33 @@
+.canvas-container {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.game-canvas {
+  border: 2px solid #0052ff;
+  border-radius: 12px;
+  background-color: #111827;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.game-canvas:active {
+  border-color: #60a5fa;
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .game-canvas {
+    border-width: 1px;
+  }
+}
+
+/* Tablet and desktop */
+@media (min-width: 768px) {
+  .game-canvas {
+    border-width: 2px;
+  }
+}
