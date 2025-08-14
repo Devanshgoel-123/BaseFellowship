@@ -6,7 +6,6 @@ export const users = pgTable("users", {
     walletAddress: varchar("wallet_address", { length: 100 }).notNull().unique(),
     points: integer("points").default(0),
     createdAt: timestamp("created_at").defaultNow(),
-    coinBalances: jsonb("coin_balances").$type<Record<string, number>>().default({})
 });
 
 /**
@@ -18,7 +17,6 @@ export const creators = pgTable("creators", {
     creatorId: integer("creator_id").references(() => users.id).notNull(),
     displayName: varchar("display_name", { length: 100 }).notNull(),
     totalHits: integer("total_hits").default(0),
-    tokenBalance: integer("rewards_balance").default(0), // tokens/points earned
     createdAt: timestamp("created_at").defaultNow(),
     coinAddress : varchar("coin_address", { length: 100 }).notNull(),
     pfp : varchar('creator_pfp', { length: 100 }).notNull(),
@@ -45,5 +43,7 @@ export const hits = pgTable("hits", {
     id: serial("id").primaryKey(),
     creatorId: integer("creator_id").references(() => creators.id).notNull(),
     fanId: integer("fan_id").references(() => users.id).notNull(),
-    color: varchar("color", { length: 20 }).notNull(),
+    gameId: varchar("game_id", { length: 100 }).notNull(),
+    createdAt: timestamp("created_at").defaultNow(),
+    hitScores: jsonb("hit_scores").$type<Record<number, number>>().default({}),
 });

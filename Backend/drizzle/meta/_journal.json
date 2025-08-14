@@ -8,6 +8,27 @@
       "when": 1755168224503,
       "tag": "0000_bright_the_enforcers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1755168669115,
+      "tag": "0001_red_supernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755169381866,
+      "tag": "0002_calm_human_cannonball",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1755170616625,
+      "tag": "0003_furry_shooting_star",
+      "breakpoints": true
     }
   ]
 }

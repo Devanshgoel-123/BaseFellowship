@@ -1,16 +1,64 @@
+import type { Request, Response } from "express";
+import { getUserProfile, registerUser, updateGameHits, getLeaderboard } from "../services/userService.js";
 
-
-export const registerUser=async (username: string, walletAddress: string)=>{
+export const RegisterUser=async (req: Request, res: Response) => {
     try{
-        const user=await prisma.user.create({
-            data:{
-                username,
-                walletAddress
-            }
-        })
+        const {username, walletAddress}=req.body;
+        const user=await registerUser(username, walletAddress);
+        if(user){
+            res.status(200).json({message: 'User registered successfully'});
+        }else{
+            res.status(400).json({message: 'Failed to register user'});
+        }
     }catch(error){
+        console.log('Error registering user', error)
+    }
+}
+
+export const GetUserProfile=async (req: Request, res: Response) => {
+    try{
+        const {walletAddress}=req.params;
+        if(!walletAddress){
+            return res.status(400).json({message: 'Wallet address is required'});
+        }
+        const user=await getUserProfile(walletAddress)
+        if(user){
+            res.status(200).json({user});
+        }else{
+            res.status(404).json({message: 'User not found'});
+        }
+    }catch(error){
+        console.log('Error getting user profile', error);
+        res.status(500).json({message: 'Internal server error'});
+    }
+}
+
+export const UpdateUserGameHits=async (req: Request, res: Response) => {
+    try{
+        const {fanId,creatorId, gameId, hitScores}=req.body;
+        const user=await updateGameHits(creatorId, fanId, gameId, hitScores);
+        if(user){
+            res.status(200).json({message: 'User game hits updated successfully'});
+        }else{
+            res.status(400).json({message: 'Failed to update user game hits'});
+        }
+    }catch(error){
+        console.log('Error updating user game hits', error);
+        res.status(500).json({message: 'Internal server error'});
+    }
 }
 
 
-// getUserProfile(userId: number)
-// updateUserWallet(userId: number, newWallet: string)
+export const GetUserLeaderBoard=async (req: Request, res: Response) => {
+    try{
+        const leaderboard=await getLeaderboard();
+        if(leaderboard){
+            res.status(200).json({leaderboard});
+        }else{
+            res.status(404).json({message: 'No leaderboard found'});
+        }
+    }catch(err){
+        console.log('Error getting user leaderboard', err);
+        res.status(500).json({message: 'Internal server error'});
+    }
+}
