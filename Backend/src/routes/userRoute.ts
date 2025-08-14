@@ -1,12 +1,11 @@
 import express from "express";
-import * as userController from "../controllers/userController.js";
+import { RegisterUser, GetUserLeaderBoard, GetUserProfile, UpdateUserGameHits, GetUserRewards, GetUserHits } from "../controllers/userController.js";
 
-export const userRouter = express.Router();
+export const UserRouter = express.Router();
 
-userRouter.post("/register", registerUs);
-userRouter.get("/profile", userController.getUserProfile);
-userRouter.post("/update-wallet", userController.updateUserWallet);
-userRouter.post("/update-hits", userController.updateGameHits);
-userRouter.get("/hits", userController.getUserHits);
-userRouter.get("/rewards", userController.getUserRewards);
-userRouter.get("/leaderboard", userController.getLeaderboard);
+UserRouter.post("/register", RegisterUser);
+UserRouter.get("/profile",GetUserProfile);
+UserRouter.post("/updateHits", UpdateUserGameHits);
+UserRouter.get("/hits", GetUserHits);
+UserRouter.get("/rewards", GetUserRewards);
+UserRouter.get("/leaderboard", GetUserLeaderBoard);

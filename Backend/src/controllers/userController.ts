@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { getUserProfile, registerUser, updateGameHits, getLeaderboard } from "../services/userService.js";
+import { getUserProfile, registerUser, updateGameHits, getLeaderboard, getUserRewards, getUserHits } from "../services/userService.js";
 
 export const RegisterUser=async (req: Request, res: Response) => {
     try{
@@ -48,7 +48,6 @@ export const UpdateUserGameHits=async (req: Request, res: Response) => {
     }
 }
 
-
 export const GetUserLeaderBoard=async (req: Request, res: Response) => {
     try{
         const leaderboard=await getLeaderboard();
@@ -59,6 +58,42 @@ export const GetUserLeaderBoard=async (req: Request, res: Response) => {
         }
     }catch(err){
         console.log('Error getting user leaderboard', err);
+        res.status(500).json({message: 'Internal server error'});
+    }
+}
+
+export const GetUserRewards=async (req: Request, res: Response) => {
+    try{
+        const {userId}=req.params;
+        if(!userId){
+            return res.status(400).json({message: 'User ID is required'});
+        }
+        const rewards=await getUserRewards(Number(userId));
+        if(rewards){
+            res.status(200).json({rewards});
+        }else{
+            res.status(404).json({message: 'No rewards found'});
+        }
+    }catch(err){
+        console.log('Error getting user rewards', err);
+        res.status(500).json({message: 'Internal server error'});
+    }
+}
+
+export const GetUserHits=async (req: Request, res: Response) => {
+    try{
+        const {userId}=req.params;
+        if(!userId){
+            return res.status(400).json({message: 'User ID is required'});
+        }
+        const hits=await getUserHits(Number(userId));
+        if(hits){
+            res.status(200).json({hits});
+        }else{
+            res.status(404).json({message: 'No hits found'});
+        }
+    }catch(err){
+        console.log('Error getting user hits', err);
         res.status(500).json({message: 'Internal server error'});
     }
 }
