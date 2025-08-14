@@ -1,98 +1,66 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import GameCanvas from "../GameCanvas";
 import ScoreBoard from "../ScoreBoard";
 import GameControls from "../GameControls";
+import LastHitColorIndicator from "../LastHitColorIndicator";
+import StatsDisplay from "../StatsDisplay";
+import GameOverModal from "../GameOverModal";
 import "./styles.scss";
 import type { Bubble, ShootingBubble, GameState } from "../../lib/bubbleType";
-import { COLORS, ROWS, COLS, BUBBLE_RADIUS } from "../../lib/constants";
+import { initializeBubbles, getRandomColor } from "../../lib/functions";
+import { ScoringSystem } from "../../lib/scoring";
 
 export default function BubbleShooter() {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const [shootingBubble, setShootingBubble] = useState<ShootingBubble | null>(
     null
   );
-  const [nextBubbleColor, setNextBubbleColor] = useState<string>(COLORS[0]);
+  const [nextBubbleColor, setNextBubbleColor] = useState<string>(getRandomColor());
   const [score, setScore] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState>("playing");
+  const [lastHitColor, setLastHitColor] = useState<string | null>(null);
+  const [showGameOver, setShowGameOver] = useState(false);
+  
+  const scoringSystem = useRef(new ScoringSystem());
 
-  const initializeBubbles = useCallback(() => {
-    const newBubbles: Bubble[] = [];
-    const isMobile = window.innerWidth < 768;
-    const adjustedRows = isMobile ? 6 : ROWS;
-    const adjustedCols = isMobile ? 8 : COLS;
-
-    for (let row = 0; row < adjustedRows; row++) {
-      const colsInRow = row % 2 === 0 ? adjustedCols : adjustedCols - 1;
-      for (let col = 0; col < colsInRow; col++) {
-        const x =
-          col * (BUBBLE_RADIUS * 2) +
-          (row % 2 === 0 ? BUBBLE_RADIUS : BUBBLE_RADIUS * 2);
-        const y = row * (BUBBLE_RADIUS * 1.7) + BUBBLE_RADIUS;
-        newBubbles.push({
-          x,
-          y,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
-          row,
-          col,
-        });
-      }
-    }
+  const handleInitializeBubbles = useCallback(() => {
+    const newBubbles = initializeBubbles();
     setBubbles(newBubbles);
-    setNextBubbleColor(COLORS[Math.floor(Math.random() * COLORS.length)]);
+    setNextBubbleColor(getRandomColor());
   }, []);
-
-  const findConnectedBubbles = useCallback(
-    (bubbles: Bubble[], startBubble: Bubble): Bubble[] => {
-      const visited = new Set<string>();
-      const connected: Bubble[] = [];
-      const queue = [startBubble];
-
-      while (queue.length > 0) {
-        const current = queue.shift()!;
-        const key = `${current.row}-${current.col}`;
-
-        if (visited.has(key)) continue;
-        visited.add(key);
-        connected.push(current);
-
-        // Find neighbors with same color only
-        const neighbors = bubbles.filter((bubble) => {
-          if (bubble.color !== startBubble.color) return false;
-          const distance = Math.sqrt(
-            Math.pow(bubble.x - current.x, 2) +
-              Math.pow(bubble.y - current.y, 2)
-          );
-          return distance <= BUBBLE_RADIUS * 2.2 && distance > 0;
-        });
-
-        neighbors.forEach((neighbor) => {
-          const neighborKey = `${neighbor.row}-${neighbor.col}`;
-          if (!visited.has(neighborKey)) {
-            queue.push(neighbor);
-          }
-        });
-      }
-
-      return connected;
-    },
-    []
-  );
 
   const resetGame = useCallback(() => {
     setScore(0);
     setGameState("playing");
     setShootingBubble(null);
-    initializeBubbles();
-  }, [initializeBubbles]);
+    setLastHitColor(null);
+    setShowGameOver(false);
+    scoringSystem.current.reset();
+    handleInitializeBubbles();
+  }, [handleInitializeBubbles]);
+
+  const handleGameOver = useCallback(() => {
+    setGameState("lost");
+    setShowGameOver(true);
+  }, []);
+
+  const handleBubblesPopped = useCallback((poppedBubbles: Bubble[]) => {
+    const points = scoringSystem.current.addPoints(poppedBubbles);
+    setScore(prev => prev + points);
+    
+    if (poppedBubbles.length > 0) {
+      setLastHitColor(poppedBubbles[0].color);
+    }
+  }, []);
 
   return (
     <div
       className="min-h-screen text-white flex flex-col items-center justify-center"
       style={{
         background:
-          "linear-gradient(135deg, #0A0A0A 0%, #1A1A2E 50%, #16213E 100%)",
+          "linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%)",
       }}
     >
       <div className="w-full max-w-sm px-4 md:max-w-2xl lg:max-w-4xl">
@@ -107,15 +75,33 @@ export default function BubbleShooter() {
           setNextBubbleColor={setNextBubbleColor}
           gameState={gameState}
           setGameState={setGameState}
-          setScore={setScore}
-          findConnectedBubbles={findConnectedBubbles}
+          onBubblesPopped={handleBubblesPopped}
+          onGameOver={handleGameOver}
         />
 
         <GameControls
           gameState={gameState}
           score={score}
           onResetGame={resetGame}
-          onInitializeBubbles={initializeBubbles}
+          onInitializeBubbles={handleInitializeBubbles}
+        />
+
+        <LastHitColorIndicator
+          lastHitColor={lastHitColor}
+          isVisible={gameState === "playing"}
+        />
+
+        {/* <StatsDisplay
+          totalPoints={scoringSystem.current.getStats().totalPoints}
+          totalBubbles={scoringSystem.current.getStats().totalBubblesPopped}
+          colorStats={scoringSystem.current.getColorStats()}
+          isVisible={gameState === "playing"}
+        /> */}
+
+        <GameOverModal
+          isVisible={showGameOver}
+          stats={scoringSystem.current.getStats()}
+          onRestart={resetGame}
         />
       </div>
     </div>

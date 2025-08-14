@@ -149,14 +149,27 @@ export const SIGNED_KEY_REQUEST_TYPE = [
   { name: "deadline", type: "uint256" },
 ];
 
+// Base chain inspired color palette
+export const BALL_BASE_BLUE = "#0052FF";
+export const BALL_DEEP_BLUE = "#1E40AF";
+export const BALL_BRIGHT_BLUE = "#3B82F6";
+export const BALL_LIGHT_BLUE = "#60A5FA";
+export const BALL_SKY_BLUE = "#93C5FD";
+export const BALL_PALE_BLUE = "#DBEAFE";
+export const BALL_AMBER = "#F59E0B";
+export const BALL_RED = "#EF4444";
+
 export const COLORS = [
-  "#0052FF",
-  "#1E40AF",
-  "#3B82F6",
-  "#60A5FA",
-  "#93C5FD",
-  "#DBEAFE",
+  BALL_BASE_BLUE,
+  BALL_DEEP_BLUE,
+  BALL_BRIGHT_BLUE,
+  BALL_LIGHT_BLUE,
+  BALL_SKY_BLUE,
+  BALL_PALE_BLUE,
+  BALL_AMBER,
+  BALL_RED,
 ];
 export const BUBBLE_RADIUS = 20;
 export const ROWS = 8;
 export const COLS = 12;
+export const SHOOT_SPEED = 10;

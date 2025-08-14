@@ -2,7 +2,13 @@
 
 import { useEffect, useRef, useCallback, useState } from "react";
 import type { Bubble, ShootingBubble, GameState } from "../../lib/bubbleType";
-import { COLORS, BUBBLE_RADIUS } from "../../lib/constants";
+import { BUBBLE_RADIUS, SHOOT_SPEED } from "../../lib/constants";
+import { getRandomColor, checkDeathLine, calculateAimAngle, createShootingBubble, addNewRowAtTop } from "../../lib/functions";
+import { renderBubble } from "../BubbleRenderer";
+import { renderBackground, renderGrid, renderDeathLine } from "../CanvasRenderer";
+import { renderShooter } from "../ShooterRenderer";
+import { renderHitAnimation } from "../HitAnimationRenderer";
+import { checkCollision, handleBubblePlacement } from "../GameLogic";
 import "./styles.scss";
 
 interface GameCanvasProps {
@@ -14,8 +20,8 @@ interface GameCanvasProps {
   setNextBubbleColor: (color: string) => void;
   gameState: GameState;
   setGameState: (state: GameState) => void;
-  setScore: (score: (prev: number) => number) => void;
-  findConnectedBubbles: (bubbles: Bubble[], startBubble: Bubble) => Bubble[];
+  onBubblesPopped: (poppedBubbles: Bubble[]) => void;
+  onGameOver: () => void;
 }
 
 export default function GameCanvas({
@@ -27,12 +33,15 @@ export default function GameCanvas({
   setNextBubbleColor,
   gameState,
   setGameState,
-  setScore,
-  findConnectedBubbles,
+  onBubblesPopped,
+  onGameOver,
 }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
-  const aimAngleRef = useRef<number>(-Math.PI / 2); // Start aiming upward
+  const aimAngleRef = useRef<number>(-Math.PI / 2);
+  const bubblesRef = useRef<Bubble[]>([]);
+  const shootingBubbleRef = useRef<ShootingBubble | null>(null);
+  const gameStateRef = useRef<GameState>("playing");
 
   const [hitPopup, setHitPopup] = useState<{
     show: boolean;
@@ -41,6 +50,20 @@ export default function GameCanvas({
     y: number;
     opacity: number;
   }>({ show: false, count: 0, x: 0, y: 0, opacity: 1 });
+
+  const [pendingNewRow, setPendingNewRow] = useState(false);
+
+  useEffect(() => {
+    bubblesRef.current = bubbles;
+  }, [bubbles]);
+
+  useEffect(() => {
+    shootingBubbleRef.current = shootingBubble;
+  }, [shootingBubble]);
+
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
 
   const getCanvasDimensions = useCallback(() => {
     const isMobile = window.innerWidth < 768;
@@ -58,117 +81,95 @@ export default function GameCanvas({
     };
   }, []);
 
-  const addNewRowAtTop = useCallback(() => {
+  const handleAddNewRow = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const newRow: Bubble[] = [];
-    const bubblesPerRow = Math.floor(canvas.width / (BUBBLE_RADIUS * 2));
+    const currentBubbles = bubblesRef.current;
+    const newBubbles = addNewRowAtTop(currentBubbles, canvas.width);
+    setBubbles(newBubbles);
+  }, [setBubbles]);
 
-    const movedBubbles = bubbles.map((bubble) => ({
-      ...bubble,
-      y: bubble.y + BUBBLE_RADIUS * 1.7,
-      row: bubble.row + 1,
-    }));
-
-    // Create new row at the top
-    for (let i = 0; i < bubblesPerRow; i++) {
-      newRow.push({
-        x: BUBBLE_RADIUS + i * (BUBBLE_RADIUS * 2),
-        y: BUBBLE_RADIUS,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        row: 0,
-        col: i,
-      });
-    }
-
-    setBubbles([...newRow, ...movedBubbles]);
-  }, [bubbles, setBubbles]);
-
-  const checkDeathLine = useCallback(() => {
+  const handleCheckDeathLine = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return false;
 
-    const deathLineY = canvas.height - 60;
+    return checkDeathLine(bubblesRef.current, canvas.height);
+  }, []);
 
-    return bubbles.some((bubble) => bubble.y >= deathLineY);
-  }, [bubbles]);
+  const handleAiming = useCallback((clientX: number, clientY: number) => {
+    if (
+      !canvasRef.current ||
+      shootingBubbleRef.current ||
+      gameStateRef.current !== "playing"
+    )
+      return;
 
-  const handleAiming = useCallback(
-    (clientX: number, clientY: number) => {
-      if (!canvasRef.current || shootingBubble || gameState !== "playing")
-        return;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const shooterX = canvas.width / 2;
+    const shooterY = canvas.height - 50;
 
-      const canvas = canvasRef.current;
-      const rect = canvas.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-
-      const shooterX = canvas.width / 2;
-      const shooterY = canvas.height - 50;
-
-      const angle = Math.atan2(y - shooterY, x - shooterX);
-
-      if (angle > -Math.PI * 0.9 && angle < -Math.PI * 0.1) {
-        aimAngleRef.current = angle;
-      }
-    },
-    [shootingBubble, gameState]
-  );
+    const angle = calculateAimAngle(clientX, clientY, rect, shooterX, shooterY);
+    aimAngleRef.current = angle;
+  }, []);
 
   const shootBubble = useCallback(() => {
-    if (shootingBubble || gameState !== "playing") return;
+    if (shootingBubbleRef.current || gameStateRef.current !== "playing") return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const shooterX = canvas.width / 2;
     const shooterY = canvas.height - 50;
-    const speed = 8;
 
-    setShootingBubble({
-      x: shooterX,
-      y: shooterY,
-      dx: Math.cos(aimAngleRef.current) * speed,
-      dy: Math.sin(aimAngleRef.current) * speed,
-      color: nextBubbleColor,
-    });
+    const newShootingBubble = createShootingBubble(
+      shooterX,
+      shooterY,
+      aimAngleRef.current,
+      nextBubbleColor,
+      SHOOT_SPEED
+    );
 
-    setNextBubbleColor(COLORS[Math.floor(Math.random() * COLORS.length)]);
-  }, [
-    shootingBubble,
-    gameState,
-    nextBubbleColor,
-    setShootingBubble,
-    setNextBubbleColor,
-  ]);
+    setShootingBubble(newShootingBubble);
+    setNextBubbleColor(getRandomColor());
+  }, [nextBubbleColor, setShootingBubble, setNextBubbleColor]);
 
   const showHitAnimation = useCallback(
     (count: number, x: number, y: number) => {
       setHitPopup({ show: true, count, x, y, opacity: 1 });
 
-      // Animate popup fade out
       let opacity = 1;
       const fadeInterval = setInterval(() => {
-        opacity -= 0.05;
-        setHitPopup((prev) => ({ ...prev, opacity, y: prev.y - 2 }));
+        opacity -= 0.03;
+        setHitPopup((prev) => ({ ...prev, opacity, y: prev.y - 1 }));
 
         if (opacity <= 0) {
           clearInterval(fadeInterval);
           setHitPopup({ show: false, count: 0, x: 0, y: 0, opacity: 1 });
         }
-      }, 50);
+      }, 80);
     },
     []
   );
 
   useEffect(() => {
-    if (gameState === "playing" && checkDeathLine()) {
-      setGameState("lost");
-    }
-  }, [bubbles, gameState, checkDeathLine, setGameState]);
+    if (pendingNewRow) {
+      const timer = setTimeout(() => {
+        handleAddNewRow();
+        setPendingNewRow(false);
+      }, 1000);
 
-  // Game animation loop
+      return () => clearTimeout(timer);
+    }
+  }, [pendingNewRow, handleAddNewRow]);
+
+  useEffect(() => {
+    if (gameState === "playing" && handleCheckDeathLine()) {
+      onGameOver();
+    }
+  }, [bubbles, gameState, handleCheckDeathLine, onGameOver]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -176,134 +177,45 @@ export default function GameCanvas({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set responsive canvas size
     const dimensions = getCanvasDimensions();
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
 
     const animate = () => {
-      // Clear canvas with Base chain dark theme
-      ctx.fillStyle = "#0A0A0A";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const currentBubbles = bubblesRef.current;
+      const currentShootingBubble = shootingBubbleRef.current;
+      const currentGameState = gameStateRef.current;
 
-      // Draw subtle grid pattern
-      ctx.strokeStyle = "#1E1E1E";
-      ctx.lineWidth = 1;
-      const gridSize = canvas.width < 400 ? 25 : 30;
-      for (let i = 0; i < canvas.width; i += gridSize) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canvas.height);
-        ctx.stroke();
-      }
+      // Render background and grid
+      renderBackground({ ctx, width: canvas.width, height: canvas.height });
+      renderGrid({ ctx, width: canvas.width, height: canvas.height });
+      renderDeathLine({ ctx, width: canvas.width, height: canvas.height });
 
-      const deathLineY = canvas.height - 60;
-      ctx.strokeStyle = "#FF0000";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([10, 5]);
-      ctx.beginPath();
-      ctx.moveTo(0, deathLineY);
-      ctx.lineTo(canvas.width, deathLineY);
-      ctx.stroke();
-      ctx.setLineDash([]);
-
-      // Draw bubbles with glow effects
-      bubbles.forEach((bubble) => {
-        // Main bubble
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, BUBBLE_RADIUS, 0, Math.PI * 2);
-        ctx.fillStyle = bubble.color;
-        ctx.fill();
-        ctx.strokeStyle = "#FFFFFF";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Glow effect
-        ctx.shadowColor = bubble.color;
-        ctx.shadowBlur = 15;
-        ctx.beginPath();
-        ctx.arc(bubble.x, bubble.y, BUBBLE_RADIUS - 5, 0, Math.PI * 2);
-        ctx.fillStyle = bubble.color + "60";
-        ctx.fill();
-        ctx.shadowBlur = 0;
+      // Render all bubbles
+      currentBubbles.forEach((bubble) => {
+        renderBubble({ bubble, ctx });
       });
 
-      // Draw shooter and aim line
-      const shooterX = canvas.width / 2;
-      const shooterY = canvas.height - 50;
+      // Render shooter and aiming line
+      renderShooter({
+        ctx,
+        width: canvas.width,
+        height: canvas.height,
+        nextBubbleColor,
+        aimAngle: aimAngleRef.current,
+        shootingBubble: currentShootingBubble,
+        gameState: currentGameState,
+      });
 
-      if (!shootingBubble && gameState === "playing") {
-        ctx.strokeStyle = "#0052FF";
-        ctx.lineWidth = 3;
-        ctx.setLineDash([5, 5]);
-        ctx.beginPath();
-        ctx.moveTo(shooterX, shooterY);
-        ctx.lineTo(
-          shooterX + Math.cos(aimAngleRef.current) * 100,
-          shooterY + Math.sin(aimAngleRef.current) * 100
-        );
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
+      // Render hit animation
+      renderHitAnimation({ ctx, hitPopup });
 
-      // Shooter base
-      ctx.beginPath();
-      ctx.arc(shooterX, shooterY, BUBBLE_RADIUS + 5, 0, Math.PI * 2);
-      ctx.fillStyle = "#1E1E1E";
-      ctx.fill();
-      ctx.strokeStyle = "#0052FF";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // Next bubble in shooter
-      ctx.beginPath();
-      ctx.arc(shooterX, shooterY, BUBBLE_RADIUS, 0, Math.PI * 2);
-      ctx.fillStyle = nextBubbleColor;
-      ctx.fill();
-      ctx.strokeStyle = "#FFFFFF";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      if (hitPopup.show) {
-        ctx.save();
-        ctx.globalAlpha = hitPopup.opacity;
-
-        // Blazing background effect
-        const gradient = ctx.createRadialGradient(
-          hitPopup.x,
-          hitPopup.y,
-          0,
-          hitPopup.x,
-          hitPopup.y,
-          50
-        );
-        gradient.addColorStop(0, "#FF6B35");
-        gradient.addColorStop(0.5, "#F7931E");
-        gradient.addColorStop(1, "transparent");
-
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(hitPopup.x, hitPopup.y, 50, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Hit count text
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 24px Arial";
-        ctx.textAlign = "center";
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 3;
-        ctx.strokeText(`+${hitPopup.count}`, hitPopup.x, hitPopup.y);
-        ctx.fillText(`+${hitPopup.count}`, hitPopup.x, hitPopup.y);
-
-        ctx.restore();
-      }
-
-      if (shootingBubble) {
-        const newShootingBubble = { ...shootingBubble };
+      if (currentShootingBubble) {
+        const newShootingBubble = { ...currentShootingBubble };
         newShootingBubble.x += newShootingBubble.dx;
         newShootingBubble.y += newShootingBubble.dy;
 
-        // Wall collision
+        // Check for wall collision and bounce
         if (
           newShootingBubble.x <= BUBBLE_RADIUS ||
           newShootingBubble.x >= canvas.width - BUBBLE_RADIUS
@@ -311,100 +223,52 @@ export default function GameCanvas({
           newShootingBubble.dx *= -1;
         }
 
-        // Check collision with existing bubbles
-        let collision = false;
-        let collisionBubble: Bubble | null = null;
+        // Check for collision with bubbles or ceiling
+        const { collision, collisionBubble, newX, newY, shouldBounce } = checkCollision({
+          shootingBubble: newShootingBubble,
+          bubbles: currentBubbles,
+          canvasWidth: canvas.width,
+          canvasHeight: canvas.height,
+        });
 
-        for (const bubble of bubbles) {
-          const distance = Math.sqrt(
-            Math.pow(newShootingBubble.x - bubble.x, 2) +
-              Math.pow(newShootingBubble.y - bubble.y, 2)
+        if (shouldBounce) {
+          // Bounce off walls
+          setShootingBubble(newShootingBubble);
+        } else if (collision) {
+          // Handle bubble placement and popping
+          const { updatedBubbles, connectedBubbles, shouldAddNewRow } = handleBubblePlacement(
+            newShootingBubble,
+            currentBubbles,
+            newX,
+            newY
           );
 
-          if (distance <= BUBBLE_RADIUS * 2) {
-            collision = true;
-            collisionBubble = bubble;
-            break;
-          }
-        }
-        if (newShootingBubble.y <= BUBBLE_RADIUS) {
-          collision = true;
-        }
-
-        if (collision) {
-          let newX = newShootingBubble.x;
-          let newY = newShootingBubble.y;
-
-          if (collisionBubble) {
-            const angle = Math.atan2(
-              newShootingBubble.y - collisionBubble.y,
-              newShootingBubble.x - collisionBubble.x
-            );
-            newX = collisionBubble.x + Math.cos(angle) * (BUBBLE_RADIUS * 2);
-            newY = collisionBubble.y + Math.sin(angle) * (BUBBLE_RADIUS * 2);
-          }
-
-          const newBubble: Bubble = {
-            x: newX,
-            y: newY,
-            color: newShootingBubble.color,
-            row: Math.floor(newY / (BUBBLE_RADIUS * 1.7)),
-            col: Math.floor(newX / (BUBBLE_RADIUS * 2)),
-          };
-
-          const updatedBubbles = [...bubbles, newBubble];
-
-          const connectedBubbles = findConnectedBubbles(
-            updatedBubbles,
-            newBubble
-          );
-
-          if (
-            connectedBubbles.length >= 3 &&
-            connectedBubbles.every((bubble) => bubble.color === newBubble.color)
-          ) {
-            const remainingBubbles = updatedBubbles.filter(
-              (bubble) =>
-                !connectedBubbles.some(
-                  (connected) =>
-                    connected.x === bubble.x && connected.y === bubble.y
-                )
-            );
-            setBubbles(remainingBubbles);
-            setScore((prev) => prev + connectedBubbles.length * 10);
+          if (connectedBubbles.length >= 3) {
+            // Bubbles were popped
+            setBubbles(updatedBubbles);
+            onBubblesPopped(connectedBubbles);
             showHitAnimation(connectedBubbles.length, newX, newY);
-            if (remainingBubbles.length === 0) {
+
+            if (updatedBubbles.length === 0) {
               setGameState("won");
             }
           } else {
+            // No bubbles popped, add new row
             setBubbles(updatedBubbles);
-            setTimeout(() => {
-              addNewRowAtTop();
-            }, 500);
+            setPendingNewRow(true);
           }
 
           setShootingBubble(null);
         } else {
+          // Continue moving the shooting bubble
           setShootingBubble(newShootingBubble);
 
-          // Draw shooting bubble
-          ctx.beginPath();
-          ctx.arc(
-            newShootingBubble.x,
-            newShootingBubble.y,
-            BUBBLE_RADIUS,
-            0,
-            Math.PI * 2
-          );
-          ctx.fillStyle = newShootingBubble.color;
-          ctx.fill();
-          ctx.strokeStyle = "#FFFFFF";
-          ctx.lineWidth = 2;
-          ctx.stroke();
+          // Render the moving bubble
+          renderBubble({ bubble: { ...newShootingBubble, row: 0, col: 0 }, ctx });
         }
       }
 
-      if (gameState === "playing") {
+      if (currentGameState === "playing") {
         animationRef.current = requestAnimationFrame(animate);
       }
     };
@@ -417,19 +281,15 @@ export default function GameCanvas({
       }
     };
   }, [
-    bubbles,
-    shootingBubble,
+    getCanvasDimensions,
     nextBubbleColor,
-    gameState,
-    findConnectedBubbles,
+    hitPopup,
     setBubbles,
-    setScore,
+    onBubblesPopped,
     setGameState,
     setShootingBubble,
-    getCanvasDimensions,
-    hitPopup,
     showHitAnimation,
-    addNewRowAtTop,
+    onGameOver,
   ]);
 
   useEffect(() => {
