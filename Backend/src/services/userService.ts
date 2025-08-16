@@ -1,6 +1,6 @@
 import { db } from "../db/db.js";
 import { users, hits, rewards } from "../db/schema.js";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 
 /**
  * Register a new user
@@ -69,6 +69,12 @@ export const updateGameHits = async (
 ) => {
   try {
     const lowerCaseWalletAddress = userAddress.toLowerCase();
+    const userPoints = await db
+      .update(users)
+      .set({
+        points: sql`${users.points} + ${normalPoints}`,
+      })
+      .where(eq(users.walletAddress, lowerCaseWalletAddress));
     const hitsEntry = await db
       .insert(hits)
       .values({
