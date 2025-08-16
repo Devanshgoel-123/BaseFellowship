@@ -4,104 +4,138 @@ import { eq, desc } from "drizzle-orm";
 
 /**
  * Register a new user
- * @param username 
- * @param walletAddress 
- * @returns 
+ * @param username
+ * @param walletAddress
+ * @returns
  */
-export const registerUser=async (username: string, walletAddress: string):Promise<boolean>=>{
-    try{
-        const lowerCaseWalletAddress=walletAddress.toLowerCase();
-        const user=await db.insert(users).values({
-            username,
-            walletAddress:lowerCaseWalletAddress
-        }).returning();
-        return true;
-    }catch(error){
-        console.log('Error registering user', error);
-        return false;
-    }
-}
+export const registerUser = async (
+  username: string,
+  walletAddress: string,
+  pfp: string
+): Promise<boolean> => {
+  try {
+    console.log("The user registery is called");
+    const lowerCaseWalletAddress = walletAddress.toLowerCase();
+    const user = await db
+      .insert(users)
+      .values({
+        username,
+        walletAddress: lowerCaseWalletAddress,
+        userPfp: pfp,
+      })
+      .returning();
+    return true;
+  } catch (error) {
+    console.log("Error registering user", error);
+    return false;
+  }
+};
 
 /**
  * Get the user profile for a given wallet address
- * @param walletAddress 
- * @returns 
+ * @param walletAddress
+ * @returns
  */
-export const getUserProfile=async (walletAddress: string)=>{
-    try{
-        const user=await db.select().from(users).where(eq(users.walletAddress, walletAddress));
-        return user[0];
-    }catch(error){
-        console.log('Error getting user profile', error)
+export const getUserProfile = async (walletAddress: string) => {
+  try {
+    const lowerCaseWalletAddress = walletAddress.toLowerCase();
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.walletAddress, lowerCaseWalletAddress));
+    if (user.length > 0) {
+      return user[0];
+    } else {
+      return null;
     }
-}
-
+  } catch (error) {
+    console.log("Error getting user profile", error);
+    return null;
+  }
+};
 
 /**
  * Update the hit history for a user
- * @param creatorId 
- * @param fanId 
- * @param gameId 
- * @param hitScores 
- * @returns 
+ * @param creatorId
+ * @param fanId
+ * @param gameId
+ * @param hitScores
+ * @returns
  */
-export const updateGameHits=async (creatorId: number, fanId: number, gameId: string, hitScores: Record<number, number>)=>{
-    try{
-        const hitsEntry=await db.insert(hits).values({
-            creatorId,
-            fanId,
-            gameId,
-            hitScores
-        }).returning();
-        console.log('Hits entry', hitsEntry);
-        return true;
-    }catch(error) {
-        console.log('Error getting user profile', error);
-        return false;
-    }
-}   
+export const updateGameHits = async (
+  userAddress: string,
+  hitScores: Record<number, number>,
+  normalPoints: number
+) => {
+  try {
+    const lowerCaseWalletAddress = userAddress.toLowerCase();
+    const hitsEntry = await db
+      .insert(hits)
+      .values({
+        userAddress: lowerCaseWalletAddress,
+        hitScores,
+        normalPoints,
+      })
+      .returning();
+    console.log("Hits entry", hitsEntry);
+    return true;
+  } catch (error) {
+    console.log("Error getting user profile", error);
+    return false;
+  }
+};
 
 /**
  * Get the hit history for a user
- * @param userId 
- * @returns 
+ * @param userId
+ * @returns
  */
-export const getUserHits=async (userId: number)=>{
-    try{
-        const hitHistory=await db.select().from(hits).where(eq(hits.fanId, userId));
-        return hitHistory;
-    }catch(error){
-        console.log('Error getting user hits', error);
-        return [];
-    }
-}   
+export const getUserHits = async (userAddress: string) => {
+  try {
+    const lowerCaseWalletAddress = userAddress.toLowerCase();
+    const hitHistory = await db
+      .select()
+      .from(hits)
+      .where(eq(hits.userAddress, lowerCaseWalletAddress));
+    return hitHistory;
+  } catch (error) {
+    console.log("Error getting user hits", error);
+    return [];
+  }
+};
 
 /**
  * Get the rewards history for a user
- * @param userId 
- * @returns 
+ * @param userId
+ * @returns
  */
-export const getUserRewards=async (userId: number)=>{
-    try{
-        const rewardsHistory=await db.select().from(rewards).where(eq(rewards.fanId, userId));
-        return rewardsHistory;
-    }catch(error){
-        console.log('Error getting user rewards', error);
-        return [];
-    }
-}
-
+export const getUserRewards = async (userAddress: string) => {
+  try {
+    const lowerCaseWalletAddress = userAddress.toLowerCase();
+    const rewardsHistory = await db
+      .select()
+      .from(rewards)
+      .where(eq(rewards.userAddress, lowerCaseWalletAddress));
+    return rewardsHistory;
+  } catch (error) {
+    console.log("Error getting user rewards", error);
+    return [];
+  }
+};
 
 /**
  * Get the leaderboard for the users
- * @returns 
+ * @returns
  */
-export const getLeaderboard=async ()=>{
-    try{
-        const leaderboard=await db.select().from(users).orderBy(desc(users.points));
-        return leaderboard;
-    }catch(error){
-        console.log('Error getting leaderboard', error);
-        return [];
-    }
-}
+export const getLeaderboard = async () => {
+  try {
+    const leaderboard = await db
+      .select()
+      .from(users)
+      .orderBy(desc(users.points));
+    return leaderboard;
+  } catch (error) {
+    console.log("Error getting leaderboard", error);
+    return [];
+  }
+};

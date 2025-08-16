@@ -29,6 +29,34 @@
       "when": 1755170616625,
       "tag": "0003_furry_shooting_star",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1755358945772,
+      "tag": "0004_absent_loki",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1755359057486,
+      "tag": "0005_lame_thunderbolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1755365362167,
+      "tag": "0006_purple_tenebrous",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1755366828526,
+      "tag": "0007_lonely_khan",
+      "breakpoints": true
     }
   ]
 }

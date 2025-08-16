@@ -1,11 +1,22 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect, useRef, useCallback, useState } from "react";
 import type { Bubble, ShootingBubble, GameState } from "../../lib/bubbleType";
 import { BUBBLE_RADIUS, SHOOT_SPEED } from "../../lib/constants";
-import { getRandomColor, checkDeathLine, calculateAimAngle, createShootingBubble, addNewRowAtTop } from "../../lib/functions";
+import {
+  getRandomColor,
+  checkDeathLine,
+  calculateAimAngle,
+  createShootingBubble,
+  addNewRowAtTop,
+} from "../../lib/functions";
 import { renderBubble } from "../BubbleRenderer";
-import { renderBackground, renderGrid, renderDeathLine } from "../CanvasRenderer";
+import {
+  renderBackground,
+  renderGrid,
+  renderDeathLine,
+} from "../CanvasRenderer";
 import { renderShooter } from "../ShooterRenderer";
 import { renderHitAnimation } from "../HitAnimationRenderer";
 import { checkCollision, handleBubblePlacement } from "../GameLogic";
@@ -224,24 +235,25 @@ export default function GameCanvas({
         }
 
         // Check for collision with bubbles or ceiling
-        const { collision, collisionBubble, newX, newY, shouldBounce } = checkCollision({
-          shootingBubble: newShootingBubble,
-          bubbles: currentBubbles,
-          canvasWidth: canvas.width,
-          canvasHeight: canvas.height,
-        });
+        const { collision, collisionBubble, newX, newY, shouldBounce } =
+          checkCollision({
+            shootingBubble: newShootingBubble,
+            bubbles: currentBubbles,
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height,
+          });
 
         if (shouldBounce) {
           // Bounce off walls
           setShootingBubble(newShootingBubble);
         } else if (collision) {
-          // Handle bubble placement and popping
-          const { updatedBubbles, connectedBubbles, shouldAddNewRow } = handleBubblePlacement(
-            newShootingBubble,
-            currentBubbles,
-            newX,
-            newY
-          );
+          const { updatedBubbles, connectedBubbles, shouldAddNewRow } =
+            handleBubblePlacement(
+              newShootingBubble,
+              currentBubbles,
+              newX,
+              newY
+            );
 
           if (connectedBubbles.length >= 3) {
             // Bubbles were popped
@@ -264,7 +276,10 @@ export default function GameCanvas({
           setShootingBubble(newShootingBubble);
 
           // Render the moving bubble
-          renderBubble({ bubble: { ...newShootingBubble, row: 0, col: 0 }, ctx });
+          renderBubble({
+            bubble: { ...newShootingBubble, row: 0, col: 0 },
+            ctx,
+          });
         }
       }
 

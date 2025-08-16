@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useCallback, useRef } from "react";
@@ -17,12 +18,14 @@ export default function BubbleShooter() {
   const [shootingBubble, setShootingBubble] = useState<ShootingBubble | null>(
     null
   );
-  const [nextBubbleColor, setNextBubbleColor] = useState<string>(getRandomColor());
+  const [nextBubbleColor, setNextBubbleColor] = useState<string>(
+    getRandomColor()
+  );
   const [score, setScore] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState>("playing");
   const [lastHitColor, setLastHitColor] = useState<string | null>(null);
   const [showGameOver, setShowGameOver] = useState(false);
-  
+
   const scoringSystem = useRef(new ScoringSystem());
 
   const handleInitializeBubbles = useCallback(() => {
@@ -48,8 +51,8 @@ export default function BubbleShooter() {
 
   const handleBubblesPopped = useCallback((poppedBubbles: Bubble[]) => {
     const points = scoringSystem.current.addPoints(poppedBubbles);
-    setScore(prev => prev + points);
-    
+    setScore((prev) => prev + points);
+
     if (poppedBubbles.length > 0) {
       setLastHitColor(poppedBubbles[0].color);
     }

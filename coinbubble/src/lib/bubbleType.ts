@@ -2,6 +2,7 @@ export interface Bubble {
   x: number;
   y: number;
   color: string;
+  creator?: string;
   row: number;
   col: number;
 }

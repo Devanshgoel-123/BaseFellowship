@@ -173,3 +173,8 @@ export const BUBBLE_RADIUS = 20;
 export const ROWS = 8;
 export const COLS = 12;
 export const SHOOT_SPEED = 10;
+
+export const JESSE_PFP = "/assets/bubble4.png";
+export const AYMAN_PFP = "/assets/bubble3.png";
+export const PENGU_PFP = "/assets/bubble1.png";
+export const SAXENA_PFP = "/assets/bubble2.png";

@@ -96,7 +96,7 @@ export const findFloatingBubbles = (bubbles: Bubble[]): Bubble[] => {
 
   // Find all bubbles connected to the top row
   const topRowBubbles = bubbles.filter((bubble) => bubble.row === 0);
-  
+
   const findConnectedToTop = (bubble: Bubble) => {
     const key = `${bubble.row}-${bubble.col}`;
     if (visited.has(key)) return;
@@ -130,27 +130,25 @@ export const addNewRowAtTop = (
   canvasWidth: number
 ): Bubble[] => {
   const newRow: Bubble[] = [];
-  const maxBubblesPerRow = Math.floor(canvasWidth / (BUBBLE_RADIUS * 2.5));
-  
-  // Determine random start and end positions for the connected group
-  const minBubbles = Math.max(3, Math.floor(maxBubblesPerRow * 0.4)); // At least 40% of max
-  const maxBubbles = Math.min(maxBubblesPerRow, Math.floor(maxBubblesPerRow * 0.8)); // At most 80% of max
-  const groupSize = Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
-  
+  const maxBubblesPerRow = Math.floor(canvasWidth / (BUBBLE_RADIUS * 2));
+
+  const minBubbles = Math.max(5, Math.floor(maxBubblesPerRow * 0.8)); // At least 40% of max
+  const maxBubbles = Math.min(
+    maxBubblesPerRow,
+    Math.floor(maxBubblesPerRow * 1)
+  ); // At most 80% of max
+  const groupSize =
+    Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
+
   // Random start position
-  const startPosition = Math.floor(Math.random() * (maxBubblesPerRow - groupSize + 1));
-  
+  const startPosition = Math.floor(
+    Math.random() * (maxBubblesPerRow - groupSize + 1)
+  );
+
   // Create connected group of bubbles
   for (let i = 0; i < groupSize; i++) {
     const x = BUBBLE_RADIUS + (startPosition + i) * (BUBBLE_RADIUS * 2);
-    newRow.push(
-      generateRandomBubble(
-        x,
-        BUBBLE_RADIUS,
-        0,
-        startPosition + i
-      )
-    );
+    newRow.push(generateRandomBubble(x, BUBBLE_RADIUS, 0, startPosition + i));
   }
 
   const movedBubbles = bubbles.map((bubble) => ({
@@ -174,7 +172,10 @@ export const calculateGridPosition = (x: number, y: number) => {
 /**
  * Check if a bubble is at the death line
  */
-export const checkDeathLine = (bubbles: Bubble[], canvasHeight: number): boolean => {
+export const checkDeathLine = (
+  bubbles: Bubble[],
+  canvasHeight: number
+): boolean => {
   const deathLineY = canvasHeight - 100;
   return bubbles.some((bubble) => bubble.y >= deathLineY);
 };
@@ -192,7 +193,7 @@ export const calculateAimAngle = (
   const x = clientX - canvasRect.left;
   const y = clientY - canvasRect.top;
   const angle = Math.atan2(y - shooterY, x - shooterX);
-  
+
   // Constrain angle to valid shooting range
   if (angle > -Math.PI * 0.9 && angle < -Math.PI * 0.1) {
     return angle;
