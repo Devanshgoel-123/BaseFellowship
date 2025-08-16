@@ -1,0 +1,34 @@
+.gradient-text {
+    background: linear-gradient(to bottom, #36ACFD, #004E7C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    font-size: 22px;
+    line-height: 100%;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    margin-top: -10px;
+    font-family: "Montserrat";
+  }
+  
+
+  .gradient-sub-text {
+    position: absolute;
+    bottom: 40px;
+    color: #0c092a;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -1%;
+    width:80%;
+    font-family: "Montserrat";
+  }
+
+  .ModeText {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    margin-top: -10px;
+    font-family: "Montserrat";
+    margin-bottom: 30px;
+  }

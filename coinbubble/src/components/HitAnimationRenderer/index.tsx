@@ -14,7 +14,6 @@ export const renderHitAnimation = ({
   hitPopup,
 }: HitAnimationRendererProps) => {
   if (!hitPopup.show) return;
-
   ctx.save();
   ctx.globalAlpha = hitPopup.opacity;
 

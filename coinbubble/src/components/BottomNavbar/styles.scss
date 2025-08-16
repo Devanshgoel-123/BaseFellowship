@@ -1,0 +1,30 @@
+.BottomNavbarWrapper{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #0275f9;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-top: 1px solid #f2f2f2;
+    padding: 12px 18px;
+}
+
+.BottomNavbarItem{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    span{
+        font-size: 12px;
+        font-family: "Rubik";
+        font-weight: 300;
+        line-height: 150%;
+        color: #f2f2f2;
+    }
+}

@@ -1,5 +1,5 @@
-import { Bubble } from "../../lib/bubbleType";
-import { BUBBLE_RADIUS } from "../../lib/constants";
+import { Bubble } from "@/lib/bubbleType";
+import {BUBBLE_RADIUS } from "@/lib/constants";
 
 interface BubbleRendererProps {
   bubble: Bubble;
@@ -35,3 +35,5 @@ export const renderBubble = ({ bubble, ctx }: BubbleRendererProps) => {
   ctx.fill();
   ctx.globalAlpha = 1;
 };
+
+

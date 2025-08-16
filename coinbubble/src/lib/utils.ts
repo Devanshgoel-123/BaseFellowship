@@ -15,6 +15,7 @@ import {
   APP_WEBHOOK_URL,
   APP_ACCOUNT_ASSOCIATION,
 } from './constants';
+import { COLORS } from './constants';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,3 +61,11 @@ export async function getFarcasterDomainManifest(): Promise<Manifest> {
     },
   };
 }
+
+
+/**
+ * Generate a random color from the available colors
+ */
+export const getRandomColor = (): string => {
+  return COLORS[Math.floor(Math.random() * COLORS.length)];
+};

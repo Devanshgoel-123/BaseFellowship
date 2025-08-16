@@ -1,0 +1,102 @@
+.gameWrapperDiv {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-image: url('/assets/backgrounds/underwaterbg.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+ 
+    .gameCanvasContainer{
+        width: 100vw;
+        height: 95vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .userScore{
+      width: 100%;
+      padding: 12px 18px;
+      color: #DADADA;
+      font-weight: 700;
+      font-family: "Montserrat", sans-serif;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      :nth-child(1){
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 5px;
+      }
+      :nth-child(2){
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 5px;
+      }
+    }
+   
+}
+
+.navbarContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.backButton {
+    color: white;              /* text-white */
+    font-size: 1.125rem;        /* text-lg */
+    font-weight: 600;           /* font-semibold */
+    background: none;           /* Remove default button bg */
+    border: none;               /* Remove border */
+    cursor: pointer;            /* Pointer on hover */
+  }
+  .backButton:hover {
+    text-decoration: underline; /* hover:underline */
+  }
+  
+  .scoreDisplay {
+    color: white;               /* text-white */
+    font-size: 1.25rem;          /* text-xl */
+    font-weight: 700;            /* font-bold */
+  }
+  
+  .menu-links {
+    display: flex;               /* flex */
+    gap: 0.75rem;                 /* space-x-3 → 12px gap */
+  }
+  
+  .menu-links a,
+  .menu-links button {
+    color: white;                /* text-white */
+    background: none;            /* Remove button bg */
+    border: none;                 /* Remove button border */
+    cursor: pointer;              /* Pointer on hover */
+    text-decoration: none;        /* No underline by default */
+  }
+  .menu-links a:hover,
+  .menu-links button:hover {
+    text-decoration: underline;   /* hover:underline */
+  }
+  
+
+  

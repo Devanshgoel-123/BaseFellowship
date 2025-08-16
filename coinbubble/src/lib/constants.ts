@@ -1,4 +1,5 @@
-import { type AccountAssociation } from "@farcaster/miniapp-core/src/manifest";
+import { type AccountAssociation } from '@farcaster/miniapp-core/src/manifest';
+import { bA } from 'node_modules/@upstash/redis/zmscore-CgRD7oFR.mjs';
 
 /**
  * Application constants and configuration values.
@@ -22,25 +23,25 @@ export const APP_URL: string = process.env.NEXT_PUBLIC_URL!;
  * The name of the mini app as displayed to users.
  * Used in titles, headers, and app store listings.
  */
-export const APP_NAME: string = "Coinbubble";
+export const APP_NAME: string = 'Bubble_Shooting';
 
 /**
  * A brief description of the mini app's functionality.
  * Used in app store listings and metadata.
  */
-export const APP_DESCRIPTION: string = "Dont Shoot Your creators in our game";
+export const APP_DESCRIPTION: string = 'This mini dapp is build for farcaster base chain';
 
 /**
  * The primary category for the mini app.
  * Used for app store categorization and discovery.
  */
-export const APP_PRIMARY_CATEGORY: string = "games";
+export const APP_PRIMARY_CATEGORY: string = 'games';
 
 /**
  * Tags associated with the mini app.
  * Used for search and discovery in app stores.
  */
-export const APP_TAGS: string[] = ["neynar", "starter-kit", "demo"];
+export const APP_TAGS: string[] = ['neynar', 'starter-kit', 'demo'];
 
 // --- Asset URLs ---
 /**
@@ -65,7 +66,7 @@ export const APP_SPLASH_URL: string = `${APP_URL}/splash.png`;
  * Background color for the splash screen.
  * Used as fallback when splash image is loading.
  */
-export const APP_SPLASH_BACKGROUND_COLOR: string = "#f7f7f7";
+export const APP_SPLASH_BACKGROUND_COLOR: string = '#f7f7f7';
 
 /**
  * Account association for the mini app.
@@ -80,7 +81,7 @@ export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined =
  * Text displayed on the main action button.
  * Used for the primary call-to-action in the mini app.
  */
-export const APP_BUTTON_TEXT: string = "Launch";
+export const APP_BUTTON_TEXT: string = 'Launch Mini App';
 
 // --- Integration Configuration ---
 /**
@@ -135,46 +136,62 @@ export const RETURN_URL: string | undefined = undefined;
 
 // PLEASE DO NOT UPDATE THIS
 export const SIGNED_KEY_REQUEST_VALIDATOR_EIP_712_DOMAIN = {
-  name: "Farcaster SignedKeyRequestValidator",
-  version: "1",
+  name: 'Farcaster SignedKeyRequestValidator',
+  version: '1',
   chainId: 10,
   verifyingContract:
-    "0x00000000fc700472606ed4fa22623acf62c60553" as `0x${string}`,
+    '0x00000000fc700472606ed4fa22623acf62c60553' as `0x${string}`,
 };
 
 // PLEASE DO NOT UPDATE THIS
 export const SIGNED_KEY_REQUEST_TYPE = [
-  { name: "requestFid", type: "uint256" },
-  { name: "key", type: "bytes" },
-  { name: "deadline", type: "uint256" },
+  { name: 'requestFid', type: 'uint256' },
+  { name: 'key', type: 'bytes' },
+  { name: 'deadline', type: 'uint256' },
 ];
 
-// Base chain inspired color palette
-export const BALL_BASE_BLUE = "#0052FF";
-export const BALL_DEEP_BLUE = "#1E40AF";
-export const BALL_BRIGHT_BLUE = "#3B82F6";
-export const BALL_LIGHT_BLUE = "#60A5FA";
-export const BALL_SKY_BLUE = "#93C5FD";
-export const BALL_PALE_BLUE = "#DBEAFE";
-export const BALL_AMBER = "#F59E0B";
-export const BALL_RED = "#EF4444";
+
+export const BALL_BLUE = "#003399";    // Dark blue
+export const BALL_RED = "#8B0000";     // Dark red
+export const BALL_GREEN = "#006B4B";   // Dark green
+export const BALL_PURPLE = "#4B0082";  // Indigo purple
+  // Dark gold (special dark metallic)
 
 export const COLORS = [
-  BALL_BASE_BLUE,
-  BALL_DEEP_BLUE,
-  BALL_BRIGHT_BLUE,
-  BALL_LIGHT_BLUE,
-  BALL_SKY_BLUE,
-  BALL_PALE_BLUE,
-  BALL_AMBER,
+  BALL_BLUE,
   BALL_RED,
+  BALL_GREEN,
+  BALL_PURPLE,
 ];
-export const BUBBLE_RADIUS = 20;
-export const ROWS = 8;
-export const COLS = 12;
-export const SHOOT_SPEED = 10;
 
-export const JESSE_PFP = "/assets/bubble4.png";
-export const AYMAN_PFP = "/assets/bubble3.png";
-export const PENGU_PFP = "/assets/bubble1.png";
-export const SAXENA_PFP = "/assets/bubble2.png";
+export const BALL_BLACK = "#8B7500"; 
+export const BUBBLE_RADIUS = 25;
+export const ROWS = 8;
+export const COLS = 7;
+export const SHOOT_SPEED = 15;
+export const JESSE_PFP="/assets/bubbles/bubble4.png";
+export const AYMAN_PFP="/assets/bubbles/bubble3.png";
+export const PENGU_PFP="/assets/bubbles/bubble1.png";
+export const SAXENA_PFP="/assets/bubbles/bubble2.png";
+
+export const CreatorBubbles:string[] = [
+    JESSE_PFP,
+    AYMAN_PFP,
+    PENGU_PFP,
+    SAXENA_PFP,
+]
+
+export const GOLD_MEDAL="/assets/Medals/gold.svg";
+export const SILVER_MEDAL="/assets/Medals/silver.svg";
+export const BRONZE_MEDAL="/assets/Medals/bronze.svg";
+
+export const MEDALS = {
+  1: GOLD_MEDAL,
+  2: SILVER_MEDAL,
+  3: BRONZE_MEDAL,
+} as const;
+
+export const NAME_IMAGE="/assets/prop/name.png";
+export const GLOBE="/assets/profile/globe.svg";
+export const LOCAL="/assets/profile/cube.svg";
+export const POINTS="/assets/profile/icon.svg";
