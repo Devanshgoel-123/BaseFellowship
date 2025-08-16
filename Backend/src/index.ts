@@ -32,3 +32,8 @@ app.get("/health", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Add Rewards Endpoint
+// Add Distribution Cron
+// Add password protected Coin allocation
+//Deploy the contract for this

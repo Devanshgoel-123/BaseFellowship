@@ -7,6 +7,8 @@ import {
   getUserRewards,
   getUserHits,
 } from "../services/userService.js";
+import { getProfileCoins } from "@zoralabs/coins-sdk";
+import { getProfileBalances } from "@zoralabs/coins-sdk";
 import { client } from "../index.js";
 
 export const userFarcasterData = async (
@@ -165,5 +167,31 @@ export const GetUserHits = async (req: Request, res: Response) => {
   } catch (err) {
     console.log("Error getting user hits", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const GetWalletDetails = async (req: Request, res: Response) => {
+  try {
+    const { walletAddress } = req.query;
+    if (!walletAddress) {
+      return res
+        .status(400)
+        .json({ message: "User wallet Address is required" });
+    }
+    const response = await getProfileBalances({
+      identifier: walletAddress as string,
+      count: 20,
+      after: undefined,
+    });
+    const profile: any = response.data?.profile;
+    console.log(`Found ${profile.coinBalances?.length || 0} coin balances`);
+
+    return res.status(200).json({
+      data: profile.coinBalances,
+    });
+  } catch (err) {
+    return res.status(400).json({
+      data: "Error fetching token balances",
+    });
   }
 };
