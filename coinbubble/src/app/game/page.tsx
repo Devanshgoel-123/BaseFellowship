@@ -1,20 +1,20 @@
 'use client';
 
 import dynamicImport from 'next/dynamic';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState, ComponentType, useRef } from 'react';
 import Link from 'next/link';
-import { Bubble, ShootingBubble, GameState } from "@/lib/bubbleType";
-import { getRandomColor } from "@/lib/utils";
-import { initializeBubbles } from "@/lib/functions";
-import { ScoringSystem } from '@/lib/functions';
-import { formatTime } from '@/lib/functions';
+import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
+import { getRandomColor } from "~/lib/utils";
+import { initializeBubbles } from "~/lib/functions";
+import { ScoringSystem } from '~/lib/functions';
+import { formatTime } from '~/lib/functions';
 import './styles.scss';
-import { updateUserGameHistory } from '@/Services/user';
+import { updateUserGameHistory } from '~/Services/user';
 import { useAccount } from 'wagmi';
+import { GAME_DURATION } from '~/lib/constants';
 
 const GameCanvas = dynamicImport(
-  () => import('@/components/GameCanvas').then((mod) => mod.default),
+  () => import('~/components/GameCanvas').then((mod) => mod.default),
   {
     ssr: false,
     loading: () => (
@@ -43,7 +43,7 @@ export default function GamePage() {
   const [nextBubbleColor, setNextBubbleColor] = useState<string>(
     getRandomColor()
   );
-  const [timer, setTimer] = useState<number | null>(10);
+  const [timer, setTimer] = useState<number | null>(GAME_DURATION);
   const [score, setScore] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState>("playing");
   const [showGameOver, setShowGameOver] = useState<boolean>(false);
@@ -72,7 +72,7 @@ export default function GamePage() {
 
   const resetGame = useCallback(() => {
     setScore(0);
-    setTimer(10);
+    setTimer(GAME_DURATION);
     setGameState("playing");
     setShootingBubble(null);
     setShowGameOver(false);

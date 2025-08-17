@@ -1,5 +1,6 @@
 
 import axios from "axios"
+import { USER_ADDRESS } from "~/lib/constants";
 import dotenv from "dotenv"
 dotenv.config()
 const BASE_USER_URL =process.env.BACKEND_URL || "http://localhost:8080/api/v1";
@@ -20,7 +21,7 @@ export const registerUser = async ({
     try{
         const response = await axios.post(`${BASE_USER_URL}/users/register`,{
                 username,
-                walletAddress
+                walletAddress:USER_ADDRESS
         })
         return response.data
     }catch(error){
@@ -44,7 +45,7 @@ export const getUserProfile = async ({
         }
         const response = await axios.get(`${BASE_USER_URL}/users/profile`,{
             params:{
-                walletAddress   
+                walletAddress:USER_ADDRESS   
             }
         })
         return response.data
@@ -74,11 +75,10 @@ export const updateUserGameHistory = async ({
         if(!userAddress){
             throw new Error("Wallet address is required")
         }
-        let userAddressNew="0x36ca9F30D48acD5E1FA10eD995783EdD8741eb3f"
-        console.log("The update user history",hitScores,userAddressNew,normalPoints)
+        console.log("The update user history",hitScores,USER_ADDRESS,normalPoints)
         const response = await axios.post(`${BASE_USER_URL}/users/updateHits`,{
                 hitScores,
-                userAddress:userAddressNew,
+                userAddress:USER_ADDRESS,
                 normalPoints
         })
         return response.data
@@ -92,9 +92,9 @@ export const updateUserGameHistory = async ({
  * Get leaderboard
  * @returns The leaderboard data
  */
-export const getLeaderBoard = async ()=>{
+export const getUserLeaderBoard = async (duration:string)=>{
     try{
-        const response = await axios.get(`${BASE_USER_URL}/user/leaderboard`)
+        const response = await axios.get(`${BASE_USER_URL}/users/leaderboard`)
         return response.data
     }catch(error){
         console.log("Error fetching leaderboard",error)
@@ -112,9 +112,9 @@ export const getUserRewards = async ({
     userAddress:string
 })=>{
     try{
-        const response = await axios.get(`${BASE_USER_URL}/user/rewards`,{
+        const response = await axios.get(`${BASE_USER_URL}/users/rewards`,{
             params:{
-                userAddress
+                userAddress:USER_ADDRESS
             }
         })
         return response.data
@@ -122,3 +122,21 @@ export const getUserRewards = async ({
     console.log("Error fetching user rewards",error)
 }
 }   
+
+
+export const getUserCollectibles = async ({
+    walletAddress
+}:{
+    walletAddress:string
+})=>{
+    try{
+        const response = await axios.get(`${BASE_USER_URL}/users/walletDetails`,{
+            params:{
+                walletAddress:USER_ADDRESS
+            }   
+        })
+        return response.data
+    }catch(error){
+        console.log("Error fetching user collectibles",error)
+    }
+}

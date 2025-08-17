@@ -1,147 +1,167 @@
-.LeaderBoardWrapper{
-    display:flex;
-    background-image: url("/assets/backgrounds/shipWreck.svg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100vw;
-    height: 100vh;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.LeaderBoardWrapper {
+  display: flex;
+  background-image: url("/assets/backgrounds/shipWreck.svg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    .LeaderBoardContainer{
+  .LeaderBoardContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+    padding-top: 20px;
+
+    .LeaderHeader {
+      font-size: 24px;
+      font-weight: 500;
+      color: #ffffff;
+      text-align: center;
+      line-height: 150%;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+
+      .backIcon {
+        position: absolute;
+        left: 30px;
+        top: 7px;
+        cursor: pointer;
+        font-size: 24px;
+      }
+    }
+
+    .LeaderBoardTab {
+      width: 90vw;
+      border-radius: 44px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      .LeaderBoardTabItem {
         display: flex;
-        flex-direction: column;
-        width: 100%;
-        height: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 160px;
+        border-radius: 44px;
+        cursor: pointer;
+        font-family: "Montserrat";
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 150%;
+        padding: 12px 24px;
+      }
+
+      .active {
+        background-color: #031b47;
+        color: #ffffff;
+        font-family: "Montserrat";
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 150%;
+        padding: 12px 24px;
+      }
+    }
+
+    .LeaderContainer {
+      width: 90vw;
+      max-height: 90%;
+      border-radius: 24px;
+      background-color: #efeefc;
+      display: flex;
+      min-height: 40%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px;
+      overflow: auto;
+      gap: 10px;
+      padding-block: 20px;
+
+      .userData {
+        display: flex;
+        flex-direction: row;
+        border-radius: 20px;
+        padding-left: 20px;
         align-items: center;
         justify-content: flex-start;
+        width: 95%;
+        height: 100px;
+        background-color: #ffffff;
         gap: 20px;
-        padding-top: 20px;
-
-        .LeaderHeader{
-            font-size: 24px;
-            font-weight: 500;
-            color: #ffffff;
-            text-align: center;
-            line-height: 150%;
-            width: 100%;
+        padding: 12px;
+        .rank {
+          width: 10%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          font-size: 18px;
+          border-radius: 100%;
+          font-weight: 500;
+          color: #858494;
+          text-align: center;
+          line-height: 150%;
+          display: flex;
+          border: 1px solid #e6e6e6;
+        }
+        .userProfile{
             display: flex;
             flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-
-            .backIcon{
-                position: absolute;
-                left: 30px;
-                top: 7px;
-                cursor: pointer;
-                font-size: 24px;
-            }
-        }
-
-        .LeaderBoardTab{
-            width: 90vw;
-            border-radius: 44px;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            .LeaderBoardTabItem{
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                width: 160px;
-                border-radius: 44px;
-                background-color: #aaaaaa;
-                cursor: pointer;
-            }
-
-            .active{
-            background-color: #031b47;
-            color: #ffffff;
-            font-family: "Montserrat";
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 150%;
-            padding: 12px 24px;
-            }
-        }
-
-        .LeaderContainer{
-            width: 90vw;
-            height: 90%;
-            border-radius: 24px;
-            background-color: #efeefc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: flex-start;
-            padding-top: 20px;
-            gap: 20px;
-            overflow: auto;
-
-            .userData{
-                display: flex;
-                flex-direction: row;
-                border-radius: 20px;
-                padding-left: 20px;
-                align-items: center;
-                justify-content: flex-start;
-                width: 95%;
-                height: 100px;
-                background-color: #ffffff;
-                gap: 20px;
-                padding: 12px 18px;
-                .rank{
-                    width: 10%;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: center;
-                    font-size: 18px;
-                    border-radius: 100%;
-                    font-weight: 500;
-                    color: #858494;
-                    text-align: center;
-                    line-height: 150%;
-                    display: flex;
-                    border: 1px solid #e6e6e6;
-                }
-
-                .logo{
-                    height: 55px;
-                    width: 55px;
-                }
-                .userPoints{
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: flex-start;
-                    align-items: center;
-                    ::nth-child(1){
-                        color: #0c092a;
-                        font-size: 18px;
-                        line-height: 150%;
-                    }
-                    :nth-child(2){
-                        color: #858494;
-                        font-family: "Montserrat";
-                        font-size: 14px;
-                        font-weight: 500;
-                        line-height: 150%;
-                    }
-                    font-size: 18px;
-                    font-weight: 500;
-                    color: #031b47;
-                    text-align: center;
-                    line-height: 150%;
-                }
-                .medalLogo{
-                    height: 40px;
-                    width: 40px;
-                }
-            }
+            align-items: center;
+            width: 20%;
         }
+        .userPoints {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          align-items: center;
+          width: 50%;
+          ::nth-child(1) {
+            color: #0c092a;
+            font-size: 18px;
+            line-height: 150%;
+          }
+          :nth-child(2) {
+            color: #858494;
+            font-family: "Montserrat";
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 150%;
+          }
+          font-size: 18px;
+          font-weight: 500;
+          color: #031b47;
+          text-align: center;
+          line-height: 150%;
+        }
+        .medalLogo {
+          height: 40px;
+          width: 40px;
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: center;
+          width: 10%;
+        }
+      }
     }
+  }
+}
+.logo {
+  height: 55px;
+  width: 55px;
+  border-radius: 50%;
 }

@@ -1,19 +1,21 @@
 'use client';
 import { useRef, useCallback, useEffect, useState } from "react";
-import { Bubble, ShootingBubble, GameState } from "@/lib/bubbleType";
-import { BUBBLE_RADIUS, ROWS, COLS, SHOOT_SPEED } from "@/lib/constants";
-import { addNewRowAtTop } from "@/lib/functions";
-import { getRandomColor } from "@/lib/utils";
-import { calculateAimAngle, createShootingBubble } from "@/lib/functions";
-import { renderBackground, checkDeathLine, renderDeathLine } from "@/lib/functions";
-import { renderBubble } from "@/components/BubbleRenderer";
+import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
+import { BUBBLE_RADIUS, SHOOT_SPEED } from "~/lib/constants";
+import { addNewRowAtTop } from "~/lib/functions";
+import { getRandomColor } from "~/lib/utils";
+import { calculateAimAngle, createShootingBubble } from "~/lib/functions";
+import { renderBackground, checkDeathLine, renderDeathLine } from "~/lib/functions";
+import { renderBubble } from "~/components/BubbleRenderer";
 import { renderShooter } from "./ShooterRenderer";
 import { renderHitAnimation } from "./HitAnimationRenderer";
-import { checkCollision } from "@/lib/functions";
-import { ScoringSystem } from "@/lib/functions";
-import { handleBubblePlacement } from "@/lib/functions";
+import { checkCollision } from "~/lib/functions";
+import { ScoringSystem } from "~/lib/functions";
+import { handleBubblePlacement } from "~/lib/functions";
+import { findFloatingBubbles } from "~/lib/functions";
+import { GoldenBubblePopup } from "./PopUpPfp";
 import Image from "next/image";
-import { findFloatingBubbles } from "@/lib/functions";
+
 interface GameCanvasProps {
   bubbles: Bubble[];
   setBubbles: (bubbles: Bubble[]) => void;
@@ -359,11 +361,7 @@ export default function GameCanvas({
       />
     </div>
     {showCreatorPopup && creatorBubble?.creator && (
-      <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-white px-6 py-4 rounded-2xl shadow-lg text-center animate-bounce">
-         <Image src={creatorBubble?.creator } alt="creator" width={100} height={100} />
-        </div>
-      </div>
+      <GoldenBubblePopup pfpSrc={creatorBubble.creator}/>
     )}
     </>
     

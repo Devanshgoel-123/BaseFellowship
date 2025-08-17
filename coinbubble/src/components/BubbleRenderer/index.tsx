@@ -1,5 +1,5 @@
-import { Bubble } from "@/lib/bubbleType";
-import {BUBBLE_RADIUS } from "@/lib/constants";
+import { Bubble } from "~/lib/bubbleType";
+import { BUBBLE_RADIUS } from "~/lib/constants";
 
 interface BubbleRendererProps {
   bubble: Bubble;
