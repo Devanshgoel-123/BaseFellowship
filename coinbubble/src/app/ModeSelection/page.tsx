@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useNeynarUser } from '~/hooks/useNeynarUser';
+import { useNeynarUser } from '../../hooks/useNeynarUser';
 import Image from 'next/image';
 import './styles.scss';
-import { BottomNavbar } from '~/components/BottomNavbar';
+import { BottomNavbar } from '../../components/BottomNavbar';
 export default function ModeSelection() {
   const router = useRouter();
   const { user } = useNeynarUser();
@@ -95,7 +95,7 @@ export default function ModeSelection() {
               
               {/* Creator Button */}
               <button 
-                onClick={() => router.push('/creator')}
+                onClick={() => router.push('/creatorauth')}
                 className="w-[100%] h-[180px] bg-cover bg-center bg-[#05245e] r7ounded-2xl p-6  hover:bg-white/30 transition-all duration-300 transform hover:scale-105 flex flex-col items-center relative
               mt-[100px] rounded-3xl opacity-70">
                  <div className="absolute top-[-30px] w-[70px] h-[70px] bg-[#b1cadc] rounded-full flex items-center justify-center mb-4">

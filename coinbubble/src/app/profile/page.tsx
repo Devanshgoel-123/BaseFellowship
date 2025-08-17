@@ -2,16 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useNeynarUser } from '~/hooks/useNeynarUser';
+import { useNeynarUser } from '../../hooks/useNeynarUser';
 import { useEffect, useRef, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { BottomNavbar } from '~/components/BottomNavbar';
+import { BottomNavbar } from '../../components/BottomNavbar';
 import "./styles.scss";
 import Image from 'next/image';
-import { getUserProfile } from '~/Services/user';
+import { getUserProfile } from '../../Services/user';
 import { useAccount } from 'wagmi';
-import { GLOBE, POINTS } from '~/lib/constants';
-import { getUserCollectibles } from '~/Services/user';
+import { GLOBE, POINTS } from '../../lib/constants';
+import { getUserCollectibles } from '../../Services/user';
 
 
 interface User{
@@ -169,7 +168,7 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div> */}
-            </div>
+        </div>
       </div>}
       <BottomNavbar/>
     </div>
