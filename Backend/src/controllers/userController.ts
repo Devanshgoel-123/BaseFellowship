@@ -74,7 +74,7 @@ export const RegisterUser = async (req: Request, res: Response) => {
 export const GetUserProfile = async (req: Request, res: Response) => {
   try {
     const { walletAddress } = req.query;
-    console.log(walletAddress);
+    console.log("The wallet address is", walletAddress);
     if (!walletAddress) {
       return res.status(400).json({ message: "Wallet address is required" });
     }
@@ -90,11 +90,11 @@ export const GetUserProfile = async (req: Request, res: Response) => {
       if (userDetails.name !== "" && userDetails.pfp !== "") {
         name = userDetails.name;
         pfp = userDetails.pfp;
-      }
-      const user = await registerUser(name, walletAddress as string, pfp);
-      if (user) {
+        const user = await registerUser(name, walletAddress as string, pfp);
+        if (user) {
         res.status(200).json({ user });
-      } else {
+      } 
+      }else {
         res.status(404).json({ message: "User not found" });
       }
     }
@@ -122,7 +122,10 @@ export const UpdateUserGameHits = async (req: Request, res: Response) => {
 
 export const GetUserLeaderBoard = async (req: Request, res: Response) => {
   try {
-    const leaderboard = await getLeaderboard();
+    const {
+      duration,
+    }=req.query;
+    const leaderboard = await getLeaderboard(duration as string);
     if (leaderboard) {
       res.status(200).json({ leaderboard });
     } else {
@@ -178,12 +181,15 @@ export const GetWalletDetails = async (req: Request, res: Response) => {
         .status(400)
         .json({ message: "User wallet Address is required" });
     }
+    console.log("The wallet address here is", walletAddress);
+    const lowerCaseWalletAddress = walletAddress.toString().toLowerCase();
     const response = await getProfileBalances({
-      identifier: walletAddress as string,
+      identifier: lowerCaseWalletAddress as string,
       count: 20,
       after: undefined,
     });
     const profile: any = response.data?.profile;
+    console.log("The profile is", profile.coinBalances);
     console.log(`Found ${profile.coinBalances?.length || 0} coin balances`);
 
     return res.status(200).json({

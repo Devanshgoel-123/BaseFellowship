@@ -1,6 +1,6 @@
 import { db } from "../db/db.js";
 import { users, hits, rewards } from "../db/schema.js";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, gte } from "drizzle-orm";
 
 /**
  * Register a new user
@@ -133,11 +133,18 @@ export const getUserRewards = async (userAddress: string) => {
  * Get the leaderboard for the users
  * @returns
  */
-export const getLeaderboard = async () => {
+export const getLeaderboard = async (duration: string) => {
   try {
+    let whereCondition;
+    if (duration === "weekly") {
+      whereCondition = gte(users.createdAt, sql`NOW() - INTERVAL '7 days'`);
+  }else if(duration === "allTime"){
+    whereCondition = sql`TRUE`;
+  }
     const leaderboard = await db
       .select()
       .from(users)
+      .where(whereCondition ?? sql`TRUE`)
       .orderBy(desc(users.points));
     return leaderboard;
   } catch (error) {

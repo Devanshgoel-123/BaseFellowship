@@ -29,6 +29,7 @@ export const creators = pgTable("creators", {
   createdAt: timestamp("created_at").defaultNow(),
   coinAddress: varchar("coin_address", { length: 100 }).notNull(),
   pfp: varchar("creator_pfp", { length: 100 }).notNull(),
+  message: varchar("message", { length: 100 }).notNull().default(""),
 });
 
 /**

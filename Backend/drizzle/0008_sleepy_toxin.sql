@@ -1,0 +1,1 @@
+ALTER TABLE "creators" ADD COLUMN "message" varchar(100) DEFAULT '' NOT NULL;
