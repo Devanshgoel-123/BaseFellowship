@@ -3,7 +3,7 @@ import { getNeynarClient } from '~/lib/neynar';
 
 export async function GET() {
   try {
-    const client = getNeynarClient();
+    const client = await getNeynarClient();
     const response = await client.fetchNonce();
     return NextResponse.json(response);
   } catch (error) {

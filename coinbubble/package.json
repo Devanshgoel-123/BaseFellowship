@@ -43,6 +43,7 @@
     "mipd": "^0.0.7",
     "next": "^15",
     "next-auth": "^4.24.11",
+    "pg": "^8.16.3",
     "radix-ui": "^1.4.3",
     "react": "^19",
     "react-dom": "^19",
@@ -57,6 +58,7 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.8",
     "@types/node": "^20",
+    "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vercel/sdk": "^1.9.0",

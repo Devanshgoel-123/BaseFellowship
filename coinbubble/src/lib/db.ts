@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import {Pool} from 'pg';
 
 // Create a new pool of connections
 export const pool = new Pool({
@@ -13,7 +13,7 @@ export const pool = new Pool({
 });
 
 // Test the connection
-pool.query('SELECT NOW()', (err, res) => {
+pool.query('SELECT NOW()', (err:any, res:any) => {
   if (err) {
     console.error('Error connecting to the database:', err);
   } else {

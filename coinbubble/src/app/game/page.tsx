@@ -49,8 +49,8 @@ export default function GamePage() {
   const [showGameOver, setShowGameOver] = useState<boolean>(false);
   const scoringSystem = useRef(new ScoringSystem());
 
-  const handleInitializeBubbles = useCallback(() => {
-    const newBubbles = initializeBubbles();
+  const handleInitializeBubbles = useCallback(async () => {
+    const newBubbles = await initializeBubbles();
     setBubbles(newBubbles);
     setNextBubbleColor(getRandomColor());
   }, []);
@@ -63,12 +63,20 @@ export default function GamePage() {
 
 
   useEffect(() => {
+    if (gameState === "lost") return;
+  
     handleInitializeBubbles();
     const timerInterval = setInterval(() => {
-      setTimer((prev) => prev !== null ? prev - 1 : null);
+      setTimer((prev) => {
+        if (prev !== null && prev > 0) {
+          return prev - 1;
+        }
+        return prev;
+      });
     }, 1000);
+  
     return () => clearInterval(timerInterval);
-  }, [handleInitializeBubbles]);
+  }, [handleInitializeBubbles, gameState]);
 
   const resetGame = useCallback(() => {
     setScore(0);
@@ -116,21 +124,23 @@ export default function GamePage() {
           <span className="timer-value">{timer !== null ? formatTime(timer) : "00:00"}</span>
         </div>
       </div>
-      <div className="gameCanvasContainer">
-        <GameCanvas
-          bubbles={bubbles}
-          setBubbles={setBubbles}
-          shootingBubble={shootingBubble}
-          setShootingBubble={setShootingBubble}
-          nextBubbleColor={nextBubbleColor}
-          setNextBubbleColor={setNextBubbleColor}
-          gameState={gameState}
-          setGameState={setGameState}
-          onBubblesPopped={handleBubblesPopped}
-          onGameOver={handleGameOver}
-          scoringSystem={scoringSystem}
-        />
-      </div>
+      {gameState === "playing" && (
+  <div className="gameCanvasContainer">
+    <GameCanvas
+      bubbles={bubbles}
+      setBubbles={setBubbles}
+      shootingBubble={shootingBubble}
+      setShootingBubble={setShootingBubble}
+      nextBubbleColor={nextBubbleColor}
+      setNextBubbleColor={setNextBubbleColor}
+      gameState={gameState}
+      setGameState={setGameState}
+      onBubblesPopped={handleBubblesPopped}
+      onGameOver={handleGameOver}
+      scoringSystem={scoringSystem}
+    />
+  </div>
+)}
 
       {showGameOver && (
         <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50 p-4">

@@ -1,8 +1,7 @@
 
 import { ShootingBubble, Bubble } from './bubbleType';
 import { ROWS, COLORS, COLS, BUBBLE_RADIUS, BALL_BLACK } from './constants';
-import { CreatorBubbles } from './constants';
-
+import { getRandomCreators } from '~/Services/creator';
 
 export function generateBubbleConfigs(
     rows: number = 6, // number of rows
@@ -49,7 +48,6 @@ export function addBubbleRow(
   
     const canvasWidth = 500;
   
-    // Shift all existing bubbles down
     existingConfigs.forEach(bubble => {
       bubble.y += (bubbleSize - 5); // Maintain hexagonal packing
     });
@@ -105,7 +103,7 @@ export const generateRandomBubble = (
 /**
  * Initialize bubbles for the game with proper hexagonal grid layout
  */
-export function initializeBubbles(): Bubble[] {
+export async function initializeBubbles(): Promise<Bubble[]> {
   const newBubbles: Bubble[] = [];
   const adjustedRows = ROWS;
   const adjustedCols = COLS;
@@ -126,12 +124,14 @@ export function initializeBubbles(): Bubble[] {
     const randomIndex = Math.floor(Math.random() * newBubbles.length);
     selectedIndices.add(randomIndex);
   }
-
+  const randomCreators = await getRandomCreators();
+  console.log("randomCreators", randomCreators);
   selectedIndices.forEach((index) => {
     const bubble = newBubbles[index];
     bubble.color = BALL_BLACK;
-    bubble.creator = CreatorBubbles[Math.floor(Math.random() * CreatorBubbles.length)];
+    bubble.creator = randomCreators[Math.floor(Math.random() * randomCreators.length)];
   });
+  console.log("newBubbles", newBubbles);
   return newBubbles;
 }
 
@@ -549,7 +549,7 @@ export class ScoringSystem {
       this.stats.totalBubblesPopped += 1;
       if(bubble.color === BALL_BLACK && bubble.creator){
         this.stats.creatorBubblesPopped.push({
-          creatorPfp: bubble.creator,
+          creatorPfp: bubble.creator?.coinAddress,
           points: 100
         })
       const colorStat = this.stats.colorStats.find(stat => stat.color === bubble.color);

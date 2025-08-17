@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getNeynarClient } from '@/lib/neynar';
+import { getNeynarClient } from '~/lib/neynar';
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const client = getNeynarClient();
+    const client = await getNeynarClient();
     const result = await client.publishCast({
       signerUuid,
       text

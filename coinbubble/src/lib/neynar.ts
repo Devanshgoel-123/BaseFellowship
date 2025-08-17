@@ -6,7 +6,7 @@ import { NeynarAPIClient, Configuration } from '@neynar/nodejs-sdk';
 let neynarClient: NeynarAPIClient | null = null;
 
 // Server-side only function to get Neynar client
-export function getNeynarClient() {
+export async function getNeynarClient(): Promise<NeynarAPIClient> {
   if (typeof window !== 'undefined') {
     throw new Error('Neynar client can only be used server-side');
   }
@@ -32,7 +32,7 @@ export interface NeynarUser {
 }
 
 export async function getNeynarUser(fid: number): Promise<NeynarUser | null> {
-  const client = getNeynarClient();
+  const client = await getNeynarClient();
   try {
     const result = await client.fetchBulkUsers({ fids: [fid] });
     const user = result.users[0];
@@ -66,7 +66,7 @@ export async function sendNeynarMiniAppNotification({
   title: string;
   body: string;
 }): Promise<SendMiniAppNotificationResult> {
-  const client = getNeynarClient();
+  const client = await getNeynarClient();
   try {
     const result = await client.fetchBulkUsers({ fids: [fid] });
     const user = result.users[0];
@@ -95,6 +95,6 @@ export async function sendNeynarMiniAppNotification({
 }
 
 export async function publishCast(signerUuid: string, text: string) {
-  const client = getNeynarClient();
+  const client = await getNeynarClient();
   return client.publishCast({ signerUuid, text });
 }

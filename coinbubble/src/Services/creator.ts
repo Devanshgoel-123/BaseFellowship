@@ -1,8 +1,9 @@
 import axios from "axios";
 import dotenv from "dotenv";
+import { Creator } from "~/lib/bubbleType";
 dotenv.config();
 const BASE_CREATOR_URL =
-  `${process.env.BACKEND_URL}` || "http://localhost:3000/api/v1";
+  process.env.BACKEND_URL || "http://localhost:8080/api/v1";
 
 export const getCreatorProfile = async ({
   creatorAddress,
@@ -49,3 +50,20 @@ export const getCreatorTopFans = async ({
     throw error;
   }
 };
+
+
+
+/**
+ * Get random creators
+ * @returns random creators
+ */
+export const getRandomCreators = async ():Promise<Creator[]> => {
+  try {
+    const response = await axios.get(`${BASE_CREATOR_URL}/creator/getCreators`);
+    console.log("response", response.data);
+    return response.data.randomCreators;
+  } catch (error) {
+    console.log("Error fetching random creators", error);
+    throw error;
+  }
+};  

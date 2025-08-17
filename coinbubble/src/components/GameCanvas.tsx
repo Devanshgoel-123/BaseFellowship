@@ -15,6 +15,7 @@ import { handleBubblePlacement } from "~/lib/functions";
 import { findFloatingBubbles } from "~/lib/functions";
 import { GoldenBubblePopup } from "./PopUpPfp";
 import Image from "next/image";
+import "./styles.scss";
 
 interface GameCanvasProps {
   bubbles: Bubble[];
@@ -166,7 +167,8 @@ export default function GameCanvas({
   }, [pendingNewRow, handleAddNewRow]);
 
   useEffect(() => {
-    if (gameState === "playing" && handleCheckDeathLine()) {
+    console.log("The bubbles are", bubbles, handleCheckDeathLine());
+    if (gameState === "playing" && bubbles.length > 0 && handleCheckDeathLine()) {
       onGameOver();
     }
   }, [bubbles, gameState, handleCheckDeathLine, onGameOver]);
@@ -251,7 +253,6 @@ export default function GameCanvas({
             setCreatorBubble(creatorBubble);
             setShowCreatorPopup(true);
             setTimeout(() => setShowCreatorPopup(false), 1200);
-            // Check if game won
             if (updatedBubbles.length === 0) {
               setGameState("won");
             }
@@ -353,16 +354,17 @@ export default function GameCanvas({
 
   return (
     <>
-    <div className="canvas-container">
+    <div className="canvasContainer">
       <canvas
         ref={canvasRef}
-        className="game-canvas"
-        style={{ touchAction: "none", borderRadius: "12px" }}
+        className="gameCanvas"
+        style={{ touchAction: "none"}}
       />
-    </div>
-    {showCreatorPopup && creatorBubble?.creator && (
-      <GoldenBubblePopup pfpSrc={creatorBubble.creator}/>
+      {showCreatorPopup && creatorBubble?.creator && (
+      <GoldenBubblePopup pfpSrc={creatorBubble.creator.pfp} message={creatorBubble.creator.message}/>
     )}
+    </div>
+    
     </>
     
   );

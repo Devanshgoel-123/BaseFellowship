@@ -1,8 +1,9 @@
 .goldenBubblePopup {
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     animation: scaleUp 0.4s ease-in-out;
-    position: relative;
-    width: 100%;
+    position: absolute;
+    height: 10vh;
+    width: 80%;
     background: url("/assets/leaderboard/popup.svg");
     background-size: cover;
     background-position: center;
@@ -11,10 +12,15 @@
     padding-inline: 25px;
     padding-top: 25px;
     padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 1.5;
   
     .goldenBubbleImage {
       position: absolute;
-      top: -90px;
+      top: -80px;
       left: 50%; 
       transform: translateX(-50%); 
       border-radius: 50%;
@@ -54,4 +60,18 @@
       opacity: 1;
       transform: scale(1);
     }
+  }
+
+  .goldenBubbleOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
   }
