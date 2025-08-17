@@ -5,64 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1755168224503,
-      "tag": "0000_bright_the_enforcers",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1755168669115,
-      "tag": "0001_red_supernaut",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1755169381866,
-      "tag": "0002_calm_human_cannonball",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1755170616625,
-      "tag": "0003_furry_shooting_star",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1755358945772,
-      "tag": "0004_absent_loki",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1755359057486,
-      "tag": "0005_lame_thunderbolt",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1755365362167,
-      "tag": "0006_purple_tenebrous",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1755366828526,
-      "tag": "0007_lonely_khan",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1755430770376,
-      "tag": "0008_sleepy_toxin",
+      "when": 1755451648101,
+      "tag": "0000_neat_jetstream",
       "breakpoints": true
     }
   ]

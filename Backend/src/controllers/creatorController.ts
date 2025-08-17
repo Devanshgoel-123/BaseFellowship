@@ -5,7 +5,7 @@ import {
   getTopFans,
   registerCreator,
 } from "../services/creatorService.js";
-
+import { getRandomCreators } from "../services/creatorService.js";
 /**
  * Register a new creator
  * @param req
@@ -96,3 +96,18 @@ export const GetTopFans = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+export const GetRandomCreators = async (req: Request, res: Response) => {
+  try {
+    const randomCreators = await getRandomCreators();
+    if (randomCreators.length > 0) {
+      res.status(200).json({ randomCreators });
+    } else {
+      res.status(500).json({ message: "No random creators found" });
+    }
+  } catch (error) {
+    console.log("Error getting random creators", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}

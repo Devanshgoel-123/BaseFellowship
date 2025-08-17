@@ -1,1 +1,0 @@
-ALTER TABLE "creators" DROP COLUMN "rewards_balance";

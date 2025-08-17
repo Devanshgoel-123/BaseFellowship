@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { creatorRouter } from "./routes/creatorRoute.js";
 import { UserRouter } from "./routes/userRoute.js";
 import { NeynarAPIClient, Configuration } from "@neynar/nodejs-sdk";
+import { CalculatePendingRewards } from "./services/userService.js";
+import { distributeRewardsCron } from "./services/userService.js";
 dotenv.config();
 
 const app = express();
@@ -38,3 +40,9 @@ app.listen(PORT, () => {
 // Add password protected Coin allocation
 //Deploy the contract for this
 //pranay5255.eth
+
+
+app.get("/api/v1/rewards", async (req, res) => {
+  const rewards = await distributeRewardsCron();
+  res.status(200).json({ rewards });
+});

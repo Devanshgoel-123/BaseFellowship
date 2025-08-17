@@ -1,5 +1,5 @@
 {
-  "id": "fd705e21-4670-4207-ba4e-a8ee69c50440",
+  "id": "4a364766-ec80-4875-9d42-f702fb5880af",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,9 +14,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "creator_id": {
-          "name": "creator_id",
-          "type": "integer",
+        "creator_address": {
+          "name": "creator_address",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -28,13 +28,6 @@
         },
         "total_hits": {
           "name": "total_hits",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
-        "rewards_balance": {
-          "name": "rewards_balance",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
@@ -58,26 +51,34 @@
           "type": "varchar(100)",
           "primaryKey": false,
           "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "''"
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "creators_creator_id_users_id_fk": {
-          "name": "creators_creator_id_users_id_fk",
-          "tableFrom": "creators",
-          "tableTo": "users",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "creators_creator_address_unique": {
+          "name": "creators_creator_address_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "creator_address"
+          ]
+        },
+        "creators_coin_address_unique": {
+          "name": "creators_coin_address_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "coin_address"
+          ]
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -92,49 +93,44 @@
           "primaryKey": true,
           "notNull": true
         },
-        "creator_id": {
-          "name": "creator_id",
-          "type": "integer",
+        "user_address": {
+          "name": "user_address",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "fan_id": {
-          "name": "fan_id",
-          "type": "integer",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "now()"
         },
-        "color": {
-          "name": "color",
-          "type": "varchar(20)",
+        "hit_scores": {
+          "name": "hit_scores",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::jsonb"
+        },
+        "normal_points": {
+          "name": "normal_points",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "hits_creator_id_creators_id_fk": {
-          "name": "hits_creator_id_creators_id_fk",
-          "tableFrom": "hits",
-          "tableTo": "creators",
-          "columnsFrom": [
-            "creator_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "hits_fan_id_users_id_fk": {
-          "name": "hits_fan_id_users_id_fk",
+        "hits_user_address_users_wallet_address_fk": {
+          "name": "hits_user_address_users_wallet_address_fk",
           "tableFrom": "hits",
           "tableTo": "users",
           "columnsFrom": [
-            "fan_id"
+            "user_address"
           ],
           "columnsTo": [
-            "id"
+            "wallet_address"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -156,27 +152,21 @@
           "primaryKey": true,
           "notNull": true
         },
-        "creator_id": {
-          "name": "creator_id",
-          "type": "integer",
+        "coin_address": {
+          "name": "coin_address",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "fan_id": {
-          "name": "fan_id",
-          "type": "integer",
+        "user_address": {
+          "name": "user_address",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "amount": {
           "name": "amount",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "type": {
-          "name": "type",
-          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true
         },
@@ -197,28 +187,28 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "rewards_creator_id_creators_id_fk": {
-          "name": "rewards_creator_id_creators_id_fk",
+        "rewards_coin_address_creators_coin_address_fk": {
+          "name": "rewards_coin_address_creators_coin_address_fk",
           "tableFrom": "rewards",
           "tableTo": "creators",
           "columnsFrom": [
-            "creator_id"
+            "coin_address"
           ],
           "columnsTo": [
-            "id"
+            "coin_address"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "rewards_fan_id_users_id_fk": {
-          "name": "rewards_fan_id_users_id_fk",
+        "rewards_user_address_users_wallet_address_fk": {
+          "name": "rewards_user_address_users_wallet_address_fk",
           "tableFrom": "rewards",
           "tableTo": "users",
           "columnsFrom": [
-            "fan_id"
+            "user_address"
           ],
           "columnsTo": [
-            "id"
+            "wallet_address"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -266,12 +256,11 @@
           "notNull": false,
           "default": "now()"
         },
-        "coin_balances": {
-          "name": "coin_balances",
-          "type": "jsonb",
+        "user_pfp": {
+          "name": "user_pfp",
+          "type": "varchar(150)",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'{}'::jsonb"
+          "notNull": true
         }
       },
       "indexes": {},
@@ -290,6 +279,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "wallet_address"
+          ]
+        },
+        "users_user_pfp_unique": {
+          "name": "users_user_pfp_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_pfp"
           ]
         }
       },

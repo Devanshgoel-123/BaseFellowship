@@ -1,1 +1,0 @@
-ALTER TABLE "users" ALTER COLUMN "user_pfp" SET DATA TYPE varchar(150);

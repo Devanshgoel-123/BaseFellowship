@@ -103,3 +103,14 @@ export const getTopFans = async (creatorAddress: string) => {
     return [];
   }
 };
+
+
+export const getRandomCreators = async () => {
+  try {
+    const randomCreators = await db.select().from(creators).orderBy(sql`RANDOM()`).limit(6);
+    return randomCreators;
+  } catch (error) {
+    console.log("Error getting random creators", error);
+    return [];
+  }
+};

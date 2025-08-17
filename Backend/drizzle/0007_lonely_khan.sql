@@ -1,1 +1,0 @@
-ALTER TABLE "hits" DROP COLUMN "game_id";

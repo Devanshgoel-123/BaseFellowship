@@ -23,11 +23,11 @@ export const users = pgTable("users", {
 
 export const creators = pgTable("creators", {
   id: serial("id").primaryKey(),
-  creatorAddress: varchar("creator_address").notNull(),
+  creatorAddress: varchar("creator_address").notNull().unique(),
   displayName: varchar("display_name", { length: 100 }).notNull(),
   totalHits: integer("total_hits").default(0),
   createdAt: timestamp("created_at").defaultNow(),
-  coinAddress: varchar("coin_address", { length: 100 }).notNull(),
+  coinAddress: varchar("coin_address", { length: 100 }).notNull().unique(),
   pfp: varchar("creator_pfp", { length: 100 }).notNull(),
   message: varchar("message", { length: 100 }).notNull().default(""),
 });
@@ -38,14 +38,13 @@ export const creators = pgTable("creators", {
  */
 export const rewards = pgTable("rewards", {
   id: serial("id").primaryKey(),
-  creatorId: integer("creator_id")
-    .references(() => creators.id)
+  coinAddress: varchar("coin_address")
+    .references(() => creators.coinAddress)
     .notNull(),
   userAddress: varchar("user_address")
     .references(() => users.walletAddress)
     .notNull(),
   amount: integer("amount").notNull(),
-  type: varchar("type", { length: 20 }).notNull(), // e.g., "hit_reward", "milestone_bonus"
   claimed: boolean("claimed").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
