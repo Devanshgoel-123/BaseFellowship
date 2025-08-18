@@ -76,6 +76,7 @@ export default function GameCanvas({
 
   const getCanvasDimensions = useCallback(() => {
     const isMobile = window.innerWidth < 768;
+    console.log("The height of the screen is ",window.innerHeight)
     return {
       width:window.innerWidth,
       height: window.innerHeight*0.95,
@@ -167,11 +168,14 @@ export default function GameCanvas({
   }, [pendingNewRow, handleAddNewRow]);
 
   useEffect(() => {
-    console.log("The bubbles are", bubbles, handleCheckDeathLine());
-    if (gameState === "playing" && bubbles.length > 0 && handleCheckDeathLine()) {
-      onGameOver();
+    if (bubbles.length > 0) {
+      const canvas = canvasRef.current;
+      if (canvas && checkDeathLine(bubblesRef.current, canvas.height)) {
+        console.log("Game Over triggered - Death line reached");
+        onGameOver();
+      }
     }
-  }, [bubbles, gameState, handleCheckDeathLine, onGameOver]);
+  }, [bubbles, onGameOver]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -197,16 +201,15 @@ export default function GameCanvas({
         renderBubble({ bubble, ctx });
       });
 
-      renderShooter({
-        ctx,
-        width: canvas.width,
-        height: canvas.height,
-        nextBubbleColor,
-        aimAngle: aimAngleRef.current,
-        shootingBubble: currentShootingBubble,
-        gameState: currentGameState,
-      });
-
+        renderShooter({
+          ctx,
+          width: canvas.width,
+          height: canvas.height,
+          nextBubbleColor,
+          aimAngle: aimAngleRef.current,
+          shootingBubble: currentShootingBubble,
+          gameState: currentGameState,
+        });
       renderHitAnimation({ ctx, hitPopup });
 
       if (currentShootingBubble) {
@@ -234,20 +237,15 @@ export default function GameCanvas({
           setShootingBubble(newShootingBubble);
         } else if (collision) {
           if (creatorHit && creatorBubble !== null) {
-            console.log("🎯 You hit the creator bubble!", creatorBubble);
-            console.log("Popping the creator bubble", creatorBubble);
-            // Remove the creator bubble
             let updatedBubbles = currentBubbles.filter(bubble => 
               !(bubble.x === creatorBubble.x && bubble.y === creatorBubble.y)
             );
-            // Find and remove floating bubbles after removal
             const floatingBubbles = findFloatingBubbles(updatedBubbles);
             updatedBubbles = updatedBubbles.filter(bubble => 
               !floatingBubbles.some(floating => 
                 floating.x === bubble.x && floating.y === bubble.y
               )
-            );
-            // Handle popped (only creator, floatings are dropped separately)
+            )
             onBubblesPopped([creatorBubble]);
             setBubbles(updatedBubbles);
             setCreatorBubble(creatorBubble);
@@ -256,7 +254,6 @@ export default function GameCanvas({
             if (updatedBubbles.length === 0) {
               setGameState("won");
             }
-            // Destroy the shooting bubble
             setShootingBubble(null);
           } else {
           const { updatedBubbles, connectedBubbles} = handleBubblePlacement(
@@ -283,10 +280,7 @@ export default function GameCanvas({
           setShootingBubble(null);
         }
         } else {
-          // Continue moving the shooting bubble
           setShootingBubble(newShootingBubble);
-
-          // Render the moving bubble
           renderBubble({ bubble: { ...newShootingBubble, row: 0, col: 0 }, ctx });
         }
       }

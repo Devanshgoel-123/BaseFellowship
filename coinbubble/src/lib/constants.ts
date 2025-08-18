@@ -149,12 +149,10 @@ export const SIGNED_KEY_REQUEST_TYPE = [
 ];
 
 
-export const BALL_BLUE = "#003399";    // Dark blue
-export const BALL_RED = "#8B0000";     // Dark red
-export const BALL_GREEN = "#006B4B";   // Dark green
-export const BALL_PURPLE = "#4B0082";  // Indigo purple
-  // Dark gold (special dark metallic)
-
+export const BALL_BLUE = "/assets/balls_asset/blue.svg";   
+export const BALL_RED = "/assets/balls_asset/red.svg";    
+export const BALL_GREEN = "/assets/balls_asset/green.svg";   
+export const BALL_PURPLE = "/assets/balls_asset/purple.svg"; 
 export const COLORS = [
   BALL_BLUE,
   BALL_RED,
@@ -162,7 +160,7 @@ export const COLORS = [
   BALL_PURPLE,
 ];
 
-export const BALL_BLACK = "#8B7500"; 
+export const BALL_BLACK = "/assets/balls_asset/golden.svg"; 
 export const BUBBLE_RADIUS = 25;
 export const ROWS = 8;
 export const COLS = 7;
@@ -196,4 +194,4 @@ export const POINTS="/assets/profile/icon.svg";
 
 export const USER_ADDRESS="0x6611f529011dafb6269cfb5506558a061b3c112a"
 
-export const GAME_DURATION=25;
+export const GAME_DURATION=205;

@@ -327,7 +327,6 @@ const loadBackgroundImage = () => {
   });
 };
 export const renderBackground = async ({ ctx, width, height }: CanvasRendererProps) => {
-  // Wait for image to load
   if (!bgLoaded) {
     await loadBackgroundImage();
   }
