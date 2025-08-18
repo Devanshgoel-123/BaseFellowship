@@ -1,10 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useNeynarUser } from '~/hooks/useNeynarUser';
 import { useEffect, useRef, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { BottomNavbar } from '~/components/BottomNavbar';
 import "./styles.scss";
 import Image from 'next/image';
@@ -24,7 +22,6 @@ interface User{
 }
 
 export default function ProfilePage() {
-  const router = useRouter();
   const { user}= useNeynarUser();
   const [menuOpen, setMenuOpen] = useState(false);
   const {address} = useAccount();
@@ -38,6 +35,7 @@ export default function ProfilePage() {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
+        console.log(menuOpen)
       }
     }
     
@@ -65,13 +63,13 @@ export default function ProfilePage() {
     fetchWalletDetails();
   },[user])
 
-  const handleSignOut = async () => {
-    try {
-      router.push('/');
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+  // const handleSignOut = async () => {
+  //   try {
+  //     router.push('/');
+  //   } catch (error) {
+  //     console.error('Error signing out:', error);
+  //   }
+  // };
 
   return (
     <div className='profileWrapper'>

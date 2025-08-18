@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const client = getNeynarClient();
+    const client = await getNeynarClient();
     const data = await client.fetchSigners({ message, signature });
     const signers = data.signers;
 

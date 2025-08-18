@@ -3,7 +3,7 @@ import { getNeynarClient } from '~/lib/neynar';
 
 export async function POST() {
   try {
-    const neynarClient = getNeynarClient();
+    const neynarClient = await getNeynarClient();
     const signer = await neynarClient.createSigner();
     return NextResponse.json(signer);
   } catch (error) {
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const neynarClient = getNeynarClient();
+    const neynarClient = await getNeynarClient();
     const signer = await neynarClient.lookupSigner({
       signerUuid,
     });

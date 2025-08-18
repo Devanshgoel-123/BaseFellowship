@@ -1,23 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { useNeynarUser } from "~/hooks/useNeynarUser";
+import { useEffect, useRef} from "react";
 import Image from "next/image";
 import "./styles.scss";
 import { BottomNavbar } from "~/components/BottomNavbar";
 export default function ModeSelection() {
   const router = useRouter();
-  const { user } = useNeynarUser();
-  const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
       }
     }
 

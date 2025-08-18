@@ -25,11 +25,6 @@ const GameCanvas = dynamicImport(
   }
 ) as ComponentType<any>;
 
-interface GameOverParams {
-  score: number;
-  lives: number;
-  pops: number;
-}
 
 export const dynamic = "force-dynamic";
 

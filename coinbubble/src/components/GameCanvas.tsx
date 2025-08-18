@@ -14,7 +14,6 @@ import { ScoringSystem } from "~/lib/functions";
 import { handleBubblePlacement } from "~/lib/functions";
 import { findFloatingBubbles } from "~/lib/functions";
 import { GoldenBubblePopup } from "./PopUpPfp";
-import Image from "next/image";
 import "./styles.scss";
 
 interface GameCanvasProps {

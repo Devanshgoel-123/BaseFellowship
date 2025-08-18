@@ -21,7 +21,7 @@ export const registerUser = async ({
     try{
         const response = await axios.post(`${BASE_USER_URL}/users/register`,{
                 username,
-                walletAddress:USER_ADDRESS
+                walletAddress:walletAddress
         })
         return response.data
     }catch(error){
@@ -45,7 +45,7 @@ export const getUserProfile = async ({
         }
         const response = await axios.get(`${BASE_USER_URL}/users/profile`,{
             params:{
-                walletAddress:USER_ADDRESS   
+                walletAddress:walletAddress  
             }
         })
         return response.data
@@ -92,7 +92,7 @@ export const updateUserGameHistory = async ({
  * Get leaderboard
  * @returns The leaderboard data
  */
-export const getUserLeaderBoard = async (duration:string)=>{
+export const getUserLeaderBoard = async (_duration:string)=>{
     try{
         const response = await axios.get(`${BASE_USER_URL}/users/leaderboard`)
         return response.data
@@ -114,7 +114,7 @@ export const getUserRewards = async ({
     try{
         const response = await axios.get(`${BASE_USER_URL}/users/rewards`,{
             params:{
-                userAddress:USER_ADDRESS
+                userAddress:userAddress
             }
         })
         return response.data
@@ -132,7 +132,7 @@ export const getUserCollectibles = async ({
     try{
         const response = await axios.get(`${BASE_USER_URL}/users/walletDetails`,{
             params:{
-                walletAddress:USER_ADDRESS
+                walletAddress:walletAddress
             }   
         })
         return response.data

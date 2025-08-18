@@ -1,13 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useNeynarUser } from '~/hooks/useNeynarUser';
-import { act, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import "./styles.scss";
 import Image from 'next/image';
 import { MEDALS } from '~/lib/constants';
-import { GoArrowLeft } from "react-icons/go";
 import { getUserLeaderBoard } from '~/Services/user';
 import {motion} from 'framer-motion';
 export interface LeaderboardUser {
@@ -20,7 +17,6 @@ export interface LeaderboardUser {
 }
 
 export default function Leaderboard() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState('weekly');
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -50,7 +46,7 @@ export default function Leaderboard() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
-
+//menuOpen
   return (
     <div className="LeaderBoardWrapper">
       <div className="LeaderBoardContainer">

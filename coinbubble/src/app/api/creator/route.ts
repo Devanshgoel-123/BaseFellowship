@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     `;
 
     const result = await pool.query(query, [creatorAddress, tokenAddress]);
-    
+    console.log(result)
     // Redirect to Zora with the creator's token address
     const zoraUrl = `https://zora.co/collect/zora:${tokenAddress}`;
     

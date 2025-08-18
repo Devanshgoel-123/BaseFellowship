@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const neynarClient = getNeynarClient();
+    const neynarClient = await getNeynarClient();
 
     const account = mnemonicToAccount(seedPhrase);
 
