@@ -164,7 +164,7 @@ export const BALL_BLACK = "/assets/balls_asset/golden.svg";
 export const BUBBLE_RADIUS = 25;
 export const ROWS = 8;
 export const COLS = 7;
-export const SHOOT_SPEED = 20;
+export const SHOOT_SPEED = 23;
 export const JESSE_PFP="/assets/bubbles/bubble4.png";
 export const AYMAN_PFP="/assets/bubbles/bubble3.png";
 export const PENGU_PFP="/assets/bubbles/bubble1.png";
@@ -194,4 +194,4 @@ export const POINTS="/assets/profile/icon.svg";
 
 export const USER_ADDRESS="0x6611f529011dafb6269cfb5506558a061b3c112a"
 
-export const GAME_DURATION=205;
+export const GAME_DURATION=30;
