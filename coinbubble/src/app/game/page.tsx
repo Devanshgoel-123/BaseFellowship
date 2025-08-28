@@ -3,11 +3,13 @@
 import dynamicImport from "next/dynamic";
 import { useCallback, useEffect, useState, ComponentType, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
 import { getRandomColor } from "~/lib/utils";
 import { initializeBubbles } from "~/lib/functions";
 import { ScoringSystem } from "~/lib/functions";
 import { formatTime } from "~/lib/functions";
+import ScoreBoard from "~/components/ScoreBoard"; // Adjust the import path as needed
 import "./styles.scss";
 import { updateUserGameHistory } from "~/Services/user";
 import { useAccount } from "wagmi";
@@ -25,11 +27,11 @@ const GameCanvas = dynamicImport(
   }
 ) as ComponentType<any>;
 
-
 export const dynamic = "force-dynamic";
 
 export default function GamePage() {
   const { address } = useAccount();
+  const router = useRouter();
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const [shootingBubble, setShootingBubble] = useState<ShootingBubble | null>(
     null
@@ -121,6 +123,38 @@ export default function GamePage() {
     setScore((prev) => prev + points);
   }, []);
 
+  // ScoreBoard handlers
+  const handleScoreBoardClose = () => {
+    setShowGameOver(false);
+  };
+
+  const handleScoreBoardHome = () => {
+    router.push('/');
+  };
+
+  const handleScoreBoardShare = () => {
+    // Implement share functionality
+    const gameStats = scoringSystem.current.getStats();
+    const shareText = `I just scored ${gameStats.totalPoints} points in the bubble game! 🎮`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Bubble Game Score',
+        text: shareText,
+        url: window.location.origin,
+      });
+    } else {
+      // Fallback for browsers that don't support native sharing
+      navigator.clipboard.writeText(`${shareText} ${window.location.origin}`);
+      alert('Score copied to clipboard!');
+    }
+  };
+
+  const handleScoreBoardReplay = async () => {
+    console.log("Replay clicked from ScoreBoard");
+    await resetGame();
+  };
+
   return (
     <div className="gameWrapperDiv">
       <div className="userScore">
@@ -154,35 +188,13 @@ export default function GamePage() {
       )}
 
       {showGameOver && (
-        <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-b from-[#35A5F7] to-[#152E92] rounded-3xl p-8 max-w-md w-full mx-4 relative overflow-hidden">
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-
-            <div className="relative z-10 text-center">
-              <h2 className="OverText">Game Over</h2>
-              <p className="text-white/80 mb-6">
-                Your score : {scoringSystem.current.getStats().totalPoints}
-              </p>
-              <div className="flex flex-col space-y-3">
-                <button
-                  onClick={async () => {
-                    console.log("Play Again clicked");
-                    await resetGame();
-                  }}
-                  className="w-full py-3 bg-white/90 hover:bg-white text-[#152E92] font-bold rounded-xl transition-colors"
-                >
-                  Play Again
-                </button>
-                <Link
-                  href="/"
-                  className="block w-full py-3 bg-transparent hover:bg-white/10 text-white font-bold border border-white/30 rounded-xl transition-colors text-center"
-                >
-                  Back to Home
-                </Link>
-              </div>
-            </div>
-          </div>
+        <div className="absolute inset-0 z-50">
+          <ScoreBoard
+            onClose={handleScoreBoardClose}
+            onHome={handleScoreBoardHome}
+            onShare={handleScoreBoardShare}
+            onReplay={handleScoreBoardReplay}
+          />
         </div>
       )}
     </div>
