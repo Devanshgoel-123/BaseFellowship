@@ -39,6 +39,10 @@ export default function ModeSelection() {
     setShowStartScreen(true);
   };
 
+  const handleCreatorClick = () => {
+    router.push("/AddSocials");
+  };
+
   const handleStartGame = () => {
     setShowStartScreen(false);
     router.push("/game");
@@ -52,9 +56,9 @@ export default function ModeSelection() {
     {
       name: "Creator",
       text: "Lock your tokens, climb the leaderboard. let players mint your coin.",
-      link: "/creator",
+      link: "/AddSocials",
       src: "/assets/selectMode/controller.svg",
-      onClick: () => router.push("/creator"),
+      onClick: handleCreatorClick,
     },
     {
       name: "Player",
