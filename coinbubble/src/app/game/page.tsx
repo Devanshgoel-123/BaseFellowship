@@ -3,6 +3,7 @@
 import dynamicImport from "next/dynamic";
 import { useCallback, useEffect, useState, ComponentType, useRef } from "react";
 import Link from "next/link";
+import { useGameStore } from "~/store/gameStats";
 import { useRouter } from "next/navigation";
 import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
 import { getRandomColor } from "~/lib/utils";
@@ -14,6 +15,8 @@ import "./styles.scss";
 import { updateUserGameHistory } from "~/Services/user";
 import { useAccount } from "wagmi";
 import { GAME_DURATION } from "~/lib/constants";
+import { promise } from "zod/v4";
+
 
 const GameCanvas = dynamicImport(
   () => import("~/components/GameCanvas").then((mod) => mod.default),
@@ -42,7 +45,7 @@ export default function GamePage() {
   const [timer, setTimer] = useState<number | null>(GAME_DURATION);
   const [score, setScore] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState>("playing");
-  const [showGameOver, setShowGameOver] = useState<boolean>(false);
+  const [showScoreBoard, setShowScoreBoard] = useState(false);
   const scoringSystem = useRef(new ScoringSystem());
 
   const handleInitializeBubbles = useCallback(async () => {
@@ -68,7 +71,14 @@ export default function GamePage() {
         return acc;
       }, {} as Record<string, number>);
     setTimer(null);
-    setShowGameOver(true);
+    useGameStore.getState().setGameOn(false);
+    useGameStore.getState().setGameOver(true);
+    
+    // Add a 1-second delay before showing the ScoreBoard
+    setTimeout(() => {
+      setShowScoreBoard(true);
+    }, 1000);
+
     const result = await updateUserGameHistory({
       hitScores,
       userAddress: address as string,
@@ -100,23 +110,23 @@ export default function GamePage() {
     return () => clearInterval(timerInterval);
   }, [handleInitializeBubbles, gameState]);
 
-  useEffect(() => {
-    console.log("Current state:", { bubbles, gameState, showGameOver });
-  }, [bubbles, gameState, showGameOver]);
-
   const resetGame = useCallback(async () => {
     try {
+      // Reset scoring system
+      scoringSystem.current = new ScoringSystem();
+      
       setGameState("playing");
       setScore(0);
       setTimer(GAME_DURATION);
       setShootingBubble(null);
       await handleInitializeBubbles();
-      setShowGameOver(false);
-      console.log("Game reset, bubbles:", bubbles);
+      useGameStore.getState().setGameOver(false);
+      useGameStore.getState().setGameOn(true);
+      console.log("Game reset successfully");
     } catch (error) {
       console.error("Error resetting game:", error);
     }
-  }, [handleInitializeBubbles, bubbles]);
+  }, [handleInitializeBubbles]);
 
   const handleBubblesPopped = useCallback((poppedBubbles: Bubble[]) => {
     const points = scoringSystem.current.addPoints(poppedBubbles);
@@ -125,7 +135,9 @@ export default function GamePage() {
 
   // ScoreBoard handlers
   const handleScoreBoardClose = () => {
-    setShowGameOver(false);
+    useGameStore.getState().setGameOver(false);
+    useGameStore.getState().setGameOn(true);
+    setShowScoreBoard(false);
   };
 
   const handleScoreBoardHome = () => {
@@ -152,6 +164,7 @@ export default function GamePage() {
 
   const handleScoreBoardReplay = async () => {
     console.log("Replay clicked from ScoreBoard");
+    setShowScoreBoard(false);
     await resetGame();
   };
 
@@ -169,7 +182,7 @@ export default function GamePage() {
           </span>
         </div>
       </div>
-      {gameState === "playing" && (
+      {useGameStore.getState().isGameOn && (
         <div className="gameCanvasContainer">
           <GameCanvas
             bubbles={bubbles}
@@ -187,13 +200,14 @@ export default function GamePage() {
         </div>
       )}
 
-      {showGameOver && (
+      {useGameStore.getState().isGameOver && showScoreBoard && (
         <div className="absolute inset-0 z-50">
           <ScoreBoard
             onClose={handleScoreBoardClose}
             onHome={handleScoreBoardHome}
             onShare={handleScoreBoardShare}
             onReplay={handleScoreBoardReplay}
+            scoringSystem={scoringSystem.current}
           />
         </div>
       )}

@@ -1,23 +1,43 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
+import { ScoringSystem } from '~/lib/functions';
+import { useGameStore } from '~/store/gameStats';
+import { randomCreators } from '~/Services/creator';
 
 interface ScoreBoardProps {
   onClose: () => void;
   onHome: () => void;
   onShare: () => void;
   onReplay: () => void;
+  scoringSystem: ScoringSystem;
 }
 
-const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onReplay }) => {
+const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onReplay, scoringSystem }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Trigger fade-in animation after component mounts
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleClose = () => {
-    onClose();
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300); // Wait for fade-out animation
   };
 
   const handleHome = () => {
-    onHome();
+    setIsVisible(false);
+    setTimeout(() => {
+      onHome();
+    }, 300);
   };
 
   const handleShare = () => {
@@ -25,157 +45,140 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
   };
 
   const handleReplay = () => {
-    onReplay();
+    setIsVisible(false);
+    setTimeout(() => {
+      onReplay();
+    }, 300);
   };
 
   return (
-    <div className="scoreboard">
-      {/* close button */}
-      <img
-        src="/assets/score_board/Close.svg"
-        className="close-button"
-        onClick={handleClose}
-        alt="Close button"
-      />
-      {/* Roll Top */}
-      <img
-        src="/assets/score_board/Roll_top.png"
-        className="roll-top"
-        alt="Roll top decoration"
-      />
-      {/* Level */}
-      <img
-        src="/assets/score_board/Level.png"
-        className="level"
-        alt="Level indicator"
-      />
-
-      {/* Roll Bottom */}
-      <img
-        src="/assets/score_board/Roll_bottom.png"
-        className="roll-bottom"
-        alt="Roll bottom decoration"
-      />
-
-      <div className="content-container">
-        {/* Base SVG */}
+    <div className={`scoreboard-container ${isVisible ? 'visible' : ''}`}>
+      <div className="blur-background"></div>
+      <div className="scoreboard">
+        {/* close button */}
         <img
-          src="/assets/score_board/Roll.png"
-          className="base-roll"
-          alt="Score board background"
+          src="/assets/score_board/Close.svg"
+          className="close-button"
+          onClick={handleClose}
+          alt="Close button"
         />
-
-        {/* Stars */}
+        {/* Roll Top */}
         <img
-          src="/assets/score_board/Stars_3.svg"
-          className="stars"
-          alt="Three stars rating"
+          src="/assets/score_board/Roll_top.png"
+          className="roll-top"
+          alt="Roll top decoration"
         />
+        {/* Level */}
+        <img
+          src="/assets/score_board/Level.png"
+          className="level"
+          alt="Level indicator"
+        />
+        {/* Roll Bottom */}
+        <img
+          src="/assets/score_board/Roll_bottom.png"
+          className="roll-bottom"
+          alt="Roll bottom decoration"
+        />
+        <div className="content-container">
+          {/* Base SVG */}
+          <img
+            src="/assets/score_board/Roll.png"
+            className="base-roll"
+            alt="Score board background"
+          />
+          {/* Stars */}
+          <img
+            src="/assets/score_board/Stars_3.svg"
+            className="stars"
+            alt="Three stars rating"
+          />
+          {/* Information Area */}
+          <div className="info-area">
+            <div className="info-content">
+              {/* Score Section */}
+              <div className="score-section">
+                <span className="label">Your Score: </span>
+                <span className="value">{scoringSystem.getStats().totalPoints}</span>
+              </div>
+              {/* Creator Coin Section */}
+              <div className="creator-coin-section">
+                <span className="label">Creator coin: </span>
+                <img
+                  src="/assets/score_board/Coin.png"
+                  alt="coin"
+                  className="coin-icon inline"
+                />
+                <span className="value">{scoringSystem.getCreatorBubblesPopped().length}</span>
+              </div>
+              {/* Coin Grid */}
+              <div className="coin-grid">
+                <div className="grid-label">Value</div>
+                <div className="coin-values">
+                  {Object.values(
+                    scoringSystem.getCreatorBubblesPopped().reduce(
+                      (acc: Record<string, { creatorPfp: string; points: number }>, item) => {
+                        const key = item.creatorPfp.toLowerCase();
+                        if (!acc[key]) {
+                          acc[key] = { creatorPfp: item.creatorPfp, points: 0 };
+                        }
+                        acc[key].points += item.points;
+                        return acc;
+                      },
+                      {}
+                    )
+                  ).map((creator, index) => {
+                    const creatorPfp = randomCreators.find(
+                      (item) => item.coinAddress.toLowerCase() === creator.creatorPfp.toLowerCase()
+                    )?.pfp;
 
-        {/* Information Area */}
-        <div className="info-area">
-          <div className="info-content">
-            {/* Score Section */}
-            <div className="score-section">
-              <span className="label">Your Score: </span>
-              <span className="value">48552</span>
-            </div>
-
-            {/* Creator Coin Section */}
-            <div className="creator-coin-section">
-              <span className="label">Creator coin: </span>
-              <img
-                src="/assets/score_board/Coin.png"
-                alt="coin"
-                className="coin-icon inline"
-              />
-              <span className="value">2</span>
-            </div>
-
-            {/* Coin Grid */}
-            <div className="coin-grid">
-              <div className="grid-label">Value</div>
-              <div className="coin-values">
-                {/* First Row */}
-                <div className="coin-item">
-                  <div className="coin-value-row">
-                    <img
-                      src="/assets/score_board/Coin.png"
-                      alt="coin"
-                      className="coin-icon"
-                    />
-                    <div className="coin-amount">0.001</div>
-                  </div>
-                  <div className="coin-name">Pratzy</div>
+                    return (
+                      <div key={index} className="coin-item">
+                        <div className="coin-value-row">
+                          <img
+                            src={creatorPfp}
+                            alt={creator.creatorPfp}
+                            className="coin-icon"
+                          />
+                          <div className="coin-amount">
+                            {creator.points * 100}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                <div className="coin-item">
-                  <div className="coin-value-row">
-                    <img
-                      src="/assets/score_board/Coin.png"
-                      alt="coin"
-                      className="coin-icon"
-                    />
-                    <div className="coin-amount">0.003</div>
-                  </div>
-                  <div className="coin-name">Ayman</div>
-                </div>
-
-                {/* Second Row */}
-                <div className="coin-item">
-                  <div className="coin-value-row">
-                    <img
-                      src="/assets/score_board/Coin.png"
-                      alt="coin"
-                      className="coin-icon"
-                    />
-                    <div className="coin-amount">0.005</div>
-                  </div>
-                  <div className="coin-name">Jesse.wtv</div>
-                </div>
-
-                <div className="coin-item">
-                  <div className="coin-value-row">
-                    <img
-                      src="/assets/score_board/Coin.png"
-                      alt="coin"
-                      className="coin-icon"
-                    />
-                    <div className="coin-amount">0.001</div>
-                  </div>
-                  <div className="coin-name">Ratnakar.etf</div>
-                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* buttons section */}
-        <div className="buttons-section">
-          <div className="buttons-container"> 
-            <img
-              src="/assets/score_board/Home.svg"
-              alt="home"
-              className="action-button"
-              onClick={handleHome}
-            />
-            <img
-              src="/assets/score_board/Share.svg"
-              alt="share"
-              className="action-button"
-              onClick={handleShare}
-            />
-            <img
-              src="/assets/score_board/Replay.svg"
-              alt="replay"
-              className="action-button"
-              onClick={handleReplay}
-            />
+          {/* buttons section */}
+          <div className="buttons-section">
+            <div className="buttons-container">
+              <img
+                src="/assets/score_board/Home.svg"
+                alt="home"
+                className="action-button"
+                onClick={handleHome}
+              />
+              <img
+                src="/assets/score_board/Share.svg"
+                alt="share"
+                className="action-button"
+                onClick={handleShare}
+              />
+              <img
+                src="/assets/score_board/Replay.svg"
+                alt="replay"
+                className="action-button"
+                onClick={handleReplay}
+              />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default ScoreBoard;

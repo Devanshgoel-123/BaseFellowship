@@ -6,6 +6,7 @@ import Image from "next/image";
 import "./styles.scss";
 import { BottomNavbar } from "~/components/BottomNavbar";
 import StartScreen from "~/components/StartScreen";
+import { useGameStore } from "~/store/gameStats";
 
 export default function ModeSelection() {
   const router = useRouter();
@@ -44,6 +45,8 @@ export default function ModeSelection() {
   };
 
   const handleStartGame = () => {
+    useGameStore.getState().setGameOn(true)
+    useGameStore.getState().setGameOver(false)
     setShowStartScreen(false);
     router.push("/game");
   };
