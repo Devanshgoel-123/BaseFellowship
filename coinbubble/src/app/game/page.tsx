@@ -122,21 +122,25 @@ export default function GamePage() {
   }, []);
 
   return (
-    <div className="gameWrapperDiv">
-      <div className="userScore">
-        <div>
-          <span className="score-label">Points:</span>
-          <span className="score-value">{score}</span>
-        </div>
-        <div>
-          <span className="timer-label">Timer</span>
-          <span className="timer-value">
-            {timer !== null ? formatTime(timer) : "00:00"}
-          </span>
+    <div className="gameWrapperDiv w-full h-screen overflow-hidden">
+      {/* Mobile-responsive score display */}
+      <div className="userScore fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm p-4">
+        <div className="flex justify-between items-center max-w-md mx-auto">
+          <div className="flex items-center space-x-2">
+            <span className="score-label text-white font-semibold">Points:</span>
+            <span className="score-value text-white font-bold text-lg">{score}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="timer-label text-white font-semibold">Timer</span>
+            <span className="timer-value text-white font-bold text-lg">
+              {timer !== null ? formatTime(timer) : "00:00"}
+            </span>
+          </div>
         </div>
       </div>
+      
       {gameState === "playing" && (
-        <div className="gameCanvasContainer">
+        <div className="gameCanvasContainer w-full h-full pt-20">
           <GameCanvas
             bubbles={bubbles}
             setBubbles={setBubbles}
@@ -154,14 +158,14 @@ export default function GamePage() {
       )}
 
       {showGameOver && (
-        <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-b from-[#35A5F7] to-[#152E92] rounded-3xl p-8 max-w-md w-full mx-4 relative overflow-hidden">
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-b from-[#35A5F7] to-[#152E92] rounded-3xl p-6 sm:p-8 max-w-sm w-full mx-4 relative overflow-hidden">
             <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
             <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
 
             <div className="relative z-10 text-center">
-              <h2 className="OverText">Game Over</h2>
-              <p className="text-white/80 mb-6">
+              <h2 className="OverText text-2xl sm:text-3xl mb-4">Game Over</h2>
+              <p className="text-white/80 mb-6 text-sm sm:text-base">
                 Your score : {scoringSystem.current.getStats().totalPoints}
               </p>
               <div className="flex flex-col space-y-3">
@@ -170,13 +174,13 @@ export default function GamePage() {
                     console.log("Play Again clicked");
                     await resetGame();
                   }}
-                  className="w-full py-3 bg-white/90 hover:bg-white text-[#152E92] font-bold rounded-xl transition-colors"
+                  className="w-full py-3 bg-white/90 hover:bg-white text-[#152E92] font-bold rounded-xl transition-colors touch-manipulation"
                 >
                   Play Again
                 </button>
                 <Link
                   href="/"
-                  className="block w-full py-3 bg-transparent hover:bg-white/10 text-white font-bold border border-white/30 rounded-xl transition-colors text-center"
+                  className="block w-full py-3 bg-transparent hover:bg-white/10 text-white font-bold border border-white/30 rounded-xl transition-colors text-center touch-manipulation"
                 >
                   Back to Home
                 </Link>
