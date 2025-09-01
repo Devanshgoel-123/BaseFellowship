@@ -62,6 +62,7 @@ export default function GamePage() {
   }, []);
 
   const handleGameOver = useCallback(async () => {
+    // Remove the early return that was preventing game over logic
     const hitScores: Record<string, number> = scoringSystem.current
       .getStats()
       .creatorBubblesPopped.reduce((acc, creatorBubblePoppedStats) => {
@@ -76,7 +77,7 @@ export default function GamePage() {
     // Add a 1-second delay before showing the ScoreBoard
     setTimeout(() => {
       setShowScoreBoard(true);
-    }, 1000);
+    }, 200);
 
     const result = await updateUserGameHistory({
       hitScores,
@@ -88,6 +89,7 @@ export default function GamePage() {
 
   useEffect(() => {
     if (timer !== null && timer <= 0) {
+      useGameStore.getState().setGameOn(false);
       handleGameOver();
     }
   }, [timer, handleGameOver, gameState]);

@@ -14,7 +14,9 @@ import { ScoringSystem } from "~/lib/functions";
 import { handleBubblePlacement } from "~/lib/functions";
 import { findFloatingBubbles } from "~/lib/functions";
 import { GoldenBubblePopup } from "./PopUpPfp";
+import { useGameStore } from "~/store/gameStats";
 import "./styles.scss";
+
 
 interface GameCanvasProps {
   bubbles: Bubble[];
@@ -81,20 +83,26 @@ export default function GameCanvas({
     
     // Mobile-first responsive dimensions
     if (isMobile) {
+      const height = window.innerHeight * 0.9; // Slightly smaller for mobile UI
+      console.log("Mobile canvas height:", height);
       return {
         width: window.innerWidth,
-        height: window.innerHeight * 0.9, // Slightly smaller for mobile UI
+        height: height,
       };
     } else if (isTablet) {
+      const height = Math.min(window.innerHeight * 0.95, 1024);
+      console.log("Tablet canvas height:", height);
       return {
         width: Math.min(window.innerWidth, 768),
-        height: Math.min(window.innerHeight * 0.95, 1024),
+        height: height,
       };
     } else {
       // Desktop
+      const height = window.innerHeight * 0.95;
+      console.log("Desktop canvas height:", height);
       return {
         width: Math.min(window.innerWidth, 1200),
-        height: window.innerHeight * 0.95,
+        height: height,
       };
     }
   }, []);
@@ -105,7 +113,14 @@ export default function GameCanvas({
     if (!canvas) return;
 
     const currentBubbles = bubblesRef.current;
+    console.log("Adding new row - Current bubbles:", currentBubbles.length);
+    console.log("Bubble Y positions before:", currentBubbles.map(b => ({ y: b.y, row: b.row })).slice(0, 5));
+    
     const newBubbles = addNewRowAtTop(currentBubbles, canvas.width);
+    
+    console.log("Bubble Y positions after:", newBubbles.map(b => ({ y: b.y, row: b.row })).slice(0, 5));
+    console.log("New total bubbles:", newBubbles.length);
+    
     setBubbles(newBubbles);
   }, [setBubbles]);
 
@@ -183,15 +198,7 @@ export default function GameCanvas({
     }
   }, [pendingNewRow, handleAddNewRow]);
 
-  useEffect(() => {
-    if (bubbles.length > 0) {
-      const canvas = canvasRef.current;
-      if (canvas && checkDeathLine(bubblesRef.current, canvas.height)) {
-        console.log("Game Over triggered - Death line reached");
-        onGameOver();
-      }
-    }
-  }, [bubbles, onGameOver]);
+  // Remove the old useEffect death line check since we're now checking every frame
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -203,6 +210,9 @@ export default function GameCanvas({
     const dimensions = getCanvasDimensions();
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
+    
+    console.log("Canvas dimensions set:", dimensions);
+    console.log("Death line will be at Y:", dimensions.height - 60);
 
     const animate = () => {
       const currentBubbles = bubblesRef.current;
@@ -211,6 +221,22 @@ export default function GameCanvas({
 
       renderBackground({ ctx, width: canvas.width, height: canvas.height });
       renderDeathLine({ ctx, width: canvas.width, height: canvas.height });
+
+      // Check death line every frame
+      const deathLineReached = checkDeathLine(currentBubbles, canvas.height);
+      if (deathLineReached && currentGameState === "playing") {
+        console.log("Game Over triggered - Death line reached");
+        console.log("Canvas height:", canvas.height);
+        console.log("Death line Y:", canvas.height - 60);
+        console.log("Bubbles at death line:", currentBubbles.filter(bubble => (bubble.y + 25) >= (canvas.height - 60)));
+        console.log("Current game state:", currentGameState);
+        setGameState("gameOver");
+        // Also update the global game store
+        useGameStore.getState().setGameOn(false);
+        useGameStore.getState().setGameOver(true);
+        onGameOver();
+        return; // Stop animation
+      }
 
       // Render all bubbles
       currentBubbles.forEach((bubble) => {

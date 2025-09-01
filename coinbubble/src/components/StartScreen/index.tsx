@@ -6,7 +6,7 @@ interface StartScreenProps {
   onStart: () => void;
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
+export const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
   const handleStart = () => {
     onStart();
   };
@@ -62,5 +62,3 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
     </div>
   )
 }
-
-export default StartScreen;

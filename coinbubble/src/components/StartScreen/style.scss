@@ -42,6 +42,7 @@
     .avatars {
       position: absolute;
       width: 150px;
+      z-index: 100;
       top: 22%;
       left: 50%;
       transform: translateX(-50%);
@@ -49,6 +50,7 @@
     
     .text-container {
       position: absolute;
+      z-index: 100;
       top: 45%;
       width: 100%;
       left: 50%;
@@ -74,6 +76,7 @@
     
     .start-button {
       position: absolute;
+      z-index: 1000;
       width: 140px;
       bottom: 10%;
       left: 50%;

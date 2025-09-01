@@ -5,13 +5,13 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import "./styles.scss";
 import { BottomNavbar } from "~/components/BottomNavbar";
-import StartScreen from "~/components/StartScreen";
+import { StartScreen } from "~/components/StartScreen";
 import { useGameStore } from "~/store/gameStats";
 
 export default function ModeSelection() {
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
-  const [showStartScreen, setShowStartScreen] = useState(false);
+  const [showStartScreen, setShowStartScreen] = useState<boolean>(false);
 
   // Close menu when clicking outside
   useEffect(() => {
