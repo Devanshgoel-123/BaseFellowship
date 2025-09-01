@@ -1,0 +1,12 @@
+{
+    "miniapp": {
+      "version": "1",
+      "name": "Bubble_Shooting",
+      "iconUrl": "undefined/icon.png",
+      "imageUrl": "undefined/api/opengraph-image",
+      "buttonTitle": "Launch Mini App",
+      "splashImageUrl": "undefined/splash.png",
+      "splashBackgroundColor": "#f7f7f7",
+      "webhookUrl": "https://api.neynar.com/f/app/30d8982f-02d4-4742-9d42-975b0fbce101/event"
+    }
+  }
