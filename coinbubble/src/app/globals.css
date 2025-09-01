@@ -116,3 +116,48 @@ body {
     @apply focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 }
+
+/* Mobile viewport optimization */
+html {
+  /* Prevent zoom on input focus on iOS */
+  -webkit-text-size-adjust: 100%;
+  /* Smooth scrolling on mobile */
+  scroll-behavior: smooth;
+}
+
+/* Mobile-specific touch targets */
+@media (max-width: 768px) {
+  button, a, input, select, textarea {
+    min-height: 44px; /* iOS recommended touch target size */
+    min-width: 44px;
+  }
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  /* Ensure content fits mobile screens */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Mobile button sizing */
+  button {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Mobile text sizing */
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  h3 { font-size: 1.125rem; }
+  p { font-size: 0.875rem; }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .container {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}

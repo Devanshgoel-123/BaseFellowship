@@ -14,14 +14,14 @@ import type { Config } from "tailwindcss";
  */
 export default {
     darkMode: "media",
-    content: [
+  content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-  	extend: {
-  		colors: {
+    extend: {
+      colors: {
   			// Main theme color - change this to update the entire app's color scheme
   			primary: "#8b5cf6", // Main brand color
   			"primary-light": "#a78bfa", // For hover states
@@ -34,16 +34,11 @@ export default {
   			// Legacy CSS variables for backward compatibility
   			background: 'var(--background)',
   			foreground: 'var(--foreground)'
-  		},
-  		borderRadius: {
+      },
+      borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		// Custom spacing for consistent layout
-  		spacing: {
-  			'18': '4.5rem',
-  			'88': '22rem',
   		},
   		// Custom container sizes
   		maxWidth: {
@@ -53,7 +48,25 @@ export default {
   			'lg': '32rem',
   			'xl': '36rem',
   			'2xl': '42rem',
-  		}
+  		},
+      // Mobile-first responsive breakpoints
+      screens: {
+        'xs': '320px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
+      },
+      // Mobile-optimized spacing (merged from duplicate properties)
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      }
   	}
   },
   plugins: [require("tailwindcss-animate")],

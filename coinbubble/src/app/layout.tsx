@@ -1,13 +1,22 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { getSession } from '~/auth';
 import '~/app/globals.css';
 import { APP_NAME, APP_DESCRIPTION } from '~/lib/constants';
 import { Providers } from './providers';
 import { Montserrat } from 'next/font/google';
 import { Rubik } from "next/font/google";
+
 export const metadata: Metadata = {
   title: APP_NAME,
   description: APP_DESCRIPTION,
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
 };
 
 

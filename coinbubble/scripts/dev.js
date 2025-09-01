@@ -145,13 +145,13 @@ async function startDev() {
   }
   
   // Start next dev with appropriate configuration
-  const nextBin = path.normalize(path.join(projectRoot, 'node_modules', '.bin', 'next'));
-
-  nextDev = spawn(nextBin, ['dev', '-p', port.toString()], {
+  // Use Node to run Next's bin directly to avoid Windows path quoting issues
+  const nextScript = path.join(projectRoot, 'node_modules', 'next', 'dist', 'bin', 'next');
+  nextDev = spawn(process.execPath, [nextScript, 'dev', '-p', port.toString()], {
     stdio: 'inherit',
     env: { ...process.env, NEXT_PUBLIC_URL: miniAppUrl, NEXTAUTH_URL: miniAppUrl },
     cwd: projectRoot,
-    shell: process.platform === 'win32' // Add shell option for Windows
+    shell: false
   });
 
   // Handle cleanup

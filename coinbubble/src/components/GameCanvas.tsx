@@ -75,11 +75,28 @@ export default function GameCanvas({
 
   const getCanvasDimensions = useCallback(() => {
     const isMobile = window.innerWidth < 768;
-    console.log("The height of the screen is ",window.innerHeight)
-    return {
-      width:window.innerWidth,
-      height: window.innerHeight*0.95,
-    };
+    const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
+    
+    console.log("The height of the screen is ", window.innerHeight);
+    
+    // Mobile-first responsive dimensions
+    if (isMobile) {
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight * 0.9, // Slightly smaller for mobile UI
+      };
+    } else if (isTablet) {
+      return {
+        width: Math.min(window.innerWidth, 768),
+        height: Math.min(window.innerHeight * 0.95, 1024),
+      };
+    } else {
+      // Desktop
+      return {
+        width: Math.min(window.innerWidth, 1200),
+        height: window.innerHeight * 0.95,
+      };
+    }
   }, []);
 
 
@@ -332,14 +349,25 @@ export default function GameCanvas({
       shootBubble();
     };
 
+    // Add touch start for better mobile responsiveness
+    const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
+      // Optional: Add haptic feedback for mobile
+      if ('vibrate' in navigator) {
+        navigator.vibrate(50);
+      }
+    };
+
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
     canvas.addEventListener("click", handleClick);
     canvas.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchstart", handleTouchStart);
       canvas.removeEventListener("click", handleClick);
       canvas.removeEventListener("touchend", handleTouchEnd);
     };
@@ -347,10 +375,10 @@ export default function GameCanvas({
 
   return (
     <>
-    <div className="canvasContainer">
+    <div className="canvasContainer w-full h-full flex items-center justify-center">
       <canvas
         ref={canvasRef}
-        className="gameCanvas"
+        className="gameCanvas w-full h-full touch-none select-none"
         style={{ touchAction: "none"}}
       />
       {showCreatorPopup && creatorBubble?.creator && (
