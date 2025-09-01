@@ -2,16 +2,20 @@
 
 import dynamicImport from "next/dynamic";
 import { useCallback, useEffect, useState, ComponentType, useRef } from "react";
-import Link from "next/link";
+import { useGameStore } from "~/store/gameStats";
+import { useRouter } from "next/navigation";
 import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
 import { getRandomColor } from "~/lib/utils";
 import { initializeBubbles } from "~/lib/functions";
 import { ScoringSystem } from "~/lib/functions";
 import { formatTime } from "~/lib/functions";
+import ScoreBoard from "~/components/ScoreBoard"; // Adjust the import path as needed
 import "./styles.scss";
 import { updateUserGameHistory } from "~/Services/user";
 import { useAccount } from "wagmi";
 import { GAME_DURATION } from "~/lib/constants";
+import { promise } from "zod/v4";
+
 
 const GameCanvas = dynamicImport(
   () => import("~/components/GameCanvas").then((mod) => mod.default),
@@ -25,11 +29,11 @@ const GameCanvas = dynamicImport(
   }
 ) as ComponentType<any>;
 
-
 export const dynamic = "force-dynamic";
 
 export default function GamePage() {
   const { address } = useAccount();
+  const router = useRouter();
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
   const [shootingBubble, setShootingBubble] = useState<ShootingBubble | null>(
     null
@@ -40,7 +44,7 @@ export default function GamePage() {
   const [timer, setTimer] = useState<number | null>(GAME_DURATION);
   const [score, setScore] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState>("playing");
-  const [showGameOver, setShowGameOver] = useState<boolean>(false);
+  const [showScoreBoard, setShowScoreBoard] = useState(false);
   const scoringSystem = useRef(new ScoringSystem());
 
   const handleInitializeBubbles = useCallback(async () => {
@@ -66,7 +70,14 @@ export default function GamePage() {
         return acc;
       }, {} as Record<string, number>);
     setTimer(null);
-    setShowGameOver(true);
+    useGameStore.getState().setGameOn(false);
+    useGameStore.getState().setGameOver(true);
+    
+    // Add a 1-second delay before showing the ScoreBoard
+    setTimeout(() => {
+      setShowScoreBoard(true);
+    }, 1000);
+
     const result = await updateUserGameHistory({
       hitScores,
       userAddress: address as string,
@@ -98,28 +109,63 @@ export default function GamePage() {
     return () => clearInterval(timerInterval);
   }, [handleInitializeBubbles, gameState]);
 
-  useEffect(() => {
-    console.log("Current state:", { bubbles, gameState, showGameOver });
-  }, [bubbles, gameState, showGameOver]);
-
   const resetGame = useCallback(async () => {
     try {
+      // Reset scoring system
+      scoringSystem.current = new ScoringSystem();
+      
       setGameState("playing");
       setScore(0);
       setTimer(GAME_DURATION);
       setShootingBubble(null);
       await handleInitializeBubbles();
-      setShowGameOver(false);
-      console.log("Game reset, bubbles:", bubbles);
+      useGameStore.getState().setGameOver(false);
+      useGameStore.getState().setGameOn(true);
+      console.log("Game reset successfully");
     } catch (error) {
       console.error("Error resetting game:", error);
     }
-  }, [handleInitializeBubbles, bubbles]);
+  }, [handleInitializeBubbles]);
 
   const handleBubblesPopped = useCallback((poppedBubbles: Bubble[]) => {
     const points = scoringSystem.current.addPoints(poppedBubbles);
     setScore((prev) => prev + points);
   }, []);
+
+  // ScoreBoard handlers
+  const handleScoreBoardClose = () => {
+    useGameStore.getState().setGameOver(false);
+    useGameStore.getState().setGameOn(true);
+    setShowScoreBoard(false);
+  };
+
+  const handleScoreBoardHome = () => {
+    router.push('/');
+  };
+
+  const handleScoreBoardShare = () => {
+    // Implement share functionality
+    const gameStats = scoringSystem.current.getStats();
+    const shareText = `I just scored ${gameStats.totalPoints} points in the bubble game! 🎮`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Bubble Game Score',
+        text: shareText,
+        url: window.location.origin,
+      });
+    } else {
+      // Fallback for browsers that don't support native sharing
+      navigator.clipboard.writeText(`${shareText} ${window.location.origin}`);
+      alert('Score copied to clipboard!');
+    }
+  };
+
+  const handleScoreBoardReplay = async () => {
+    console.log("Replay clicked from ScoreBoard");
+    setShowScoreBoard(false);
+    await resetGame();
+  };
 
   return (
     <div className="gameWrapperDiv w-full h-screen overflow-hidden">
@@ -138,8 +184,7 @@ export default function GamePage() {
           </div>
         </div>
       </div>
-      
-      {gameState === "playing" && (
+      {useGameStore.getState().isGameOn && (
         <div className="gameCanvasContainer w-full h-full pt-20">
           <GameCanvas
             bubbles={bubbles}
@@ -156,37 +201,15 @@ export default function GamePage() {
           />
         </div>
       )}
-
-      {showGameOver && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-b from-[#35A5F7] to-[#152E92] rounded-3xl p-6 sm:p-8 max-w-sm w-full mx-4 relative overflow-hidden">
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-
-            <div className="relative z-10 text-center">
-              <h2 className="OverText text-2xl sm:text-3xl mb-4">Game Over</h2>
-              <p className="text-white/80 mb-6 text-sm sm:text-base">
-                Your score : {scoringSystem.current.getStats().totalPoints}
-              </p>
-              <div className="flex flex-col space-y-3">
-                <button
-                  onClick={async () => {
-                    console.log("Play Again clicked");
-                    await resetGame();
-                  }}
-                  className="w-full py-3 bg-white/90 hover:bg-white text-[#152E92] font-bold rounded-xl transition-colors touch-manipulation"
-                >
-                  Play Again
-                </button>
-                <Link
-                  href="/"
-                  className="block w-full py-3 bg-transparent hover:bg-white/10 text-white font-bold border border-white/30 rounded-xl transition-colors text-center touch-manipulation"
-                >
-                  Back to Home
-                </Link>
-              </div>
-            </div>
-          </div>
+      {useGameStore.getState().isGameOver && showScoreBoard && (
+        <div className="absolute inset-0 z-50">
+          <ScoreBoard
+            onClose={handleScoreBoardClose}
+            onHome={handleScoreBoardHome}
+            onShare={handleScoreBoardShare}
+            onReplay={handleScoreBoardReplay}
+            scoringSystem={scoringSystem.current}
+          />
         </div>
       )}
     </div>
