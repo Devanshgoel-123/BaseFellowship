@@ -185,7 +185,7 @@ export default function GamePage() {
         </div>
       </div>
       {useGameStore.getState().isGameOn && (
-        <div className="gameCanvasContainer">
+        <div className="gameCanvasContainer w-full h-full pt-20">
           <GameCanvas
             bubbles={bubbles}
             setBubbles={setBubbles}
@@ -201,7 +201,6 @@ export default function GamePage() {
           />
         </div>
       )}
-
       {useGameStore.getState().isGameOver && showScoreBoard && (
         <div className="absolute inset-0 z-50">
           <ScoreBoard
