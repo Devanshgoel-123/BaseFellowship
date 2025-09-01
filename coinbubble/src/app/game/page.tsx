@@ -2,7 +2,6 @@
 
 import dynamicImport from "next/dynamic";
 import { useCallback, useEffect, useState, ComponentType, useRef } from "react";
-import Link from "next/link";
 import { useGameStore } from "~/store/gameStats";
 import { useRouter } from "next/navigation";
 import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
