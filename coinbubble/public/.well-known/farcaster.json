@@ -9,5 +9,10 @@
       "splashImageUrl": "https://base-fellowship-bice.vercel.app/splash.png",
       "splashBackgroundColor": "#f7f7f7",
       "webhookUrl": "https://api.neynar.com/f/app/30d8982f-02d4-4742-9d42-975b0fbce101/event"
+    },
+    "accountAssociation": {
+      "header": "eyJmaWQiOjExNTAwNzIsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgxNTQ0QjBlMzNCZDQ1ZDNjMDhjOEZiNDhBNmQ2MDQxMDZjM0JEMDI3In0",
+      "payload": "eyJkb21haW4iOiJiYXNlLWZlbGxvd3NoaXAtYmljZS52ZXJjZWwuYXBwIn0",
+      "signature": "MHg5NDk2YTFiMzdkZjE0YjhkYmU3MWYxYmVmZWIxZjdlOWY0MGVhODBhMTVkYjFkYzViYWY0ZjMzODA0MjVlOTVmMWNkOWJiZDIzOTg2NmEzOTMxYzUwYmRjY2IxYmQ3MjRkYTUyNDFiMDJhYzgwYjg2MzQzYWZlMDA1MGZlN2Q1NDFi"
     }
   }

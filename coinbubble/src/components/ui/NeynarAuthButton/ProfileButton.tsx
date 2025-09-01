@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useDetectClickOutside } from '~/hooks/useDetectClickOutside';
 import { cn } from '~/lib/utils';
-
+import { RefObject } from 'react';
 export function ProfileButton({
   userData,
   onSignOut,
@@ -12,9 +12,11 @@ export function ProfileButton({
   onSignOut: () => void;
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useDetectClickOutside(ref, () => setShowDropdown(false));
+  const ref = useRef<HTMLDivElement | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if(ref !== null) {
+    useDetectClickOutside(ref as RefObject<HTMLDivElement>, () => setShowDropdown(false));
+  }
 
   const name = userData?.username ?? `!${userData?.fid}`;
   const pfpUrl = userData?.pfpUrl ?? 'https://farcaster.xyz/avatar.png';

@@ -41,7 +41,6 @@ export const renderShooter = ({
   if (nextBubbleColor === null) return;
   const shooterX = width / 2;
   const shooterY = height + 40;
- console.log("The next bubble color is", nextBubbleColor)
  if (cannonLoaded) {
   const cannonWidth = 100;
   const cannonHeight = 200;

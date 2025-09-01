@@ -33,3 +33,68 @@
     margin-bottom: 30px;
 
   }
+
+.scoreboard-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+.blur-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  backdrop-filter: blur(8px); /* Blur effect */
+  -webkit-backdrop-filter: blur(8px); /* For Safari compatibility */
+  z-index: 1; /* Behind the scoreboard */
+}
+
+.scoreboard {
+  position: relative;
+  z-index: 2; /* Above the blur background */
+  background: #fff; /* Ensure scoreboard has a solid background */
+  border-radius: 10px; /* Optional: Add rounded corners */
+  padding: 20px; /* Optional: Add padding for better spacing */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Add shadow for depth */
+}
+
+/* Ensure the content inside the scoreboard remains sharp */
+.content-container,
+.info-area,
+.score-section,
+.creator-coin-section,
+.coin-grid,
+.buttons-section {
+  position: relative;
+  z-index: 3; /* Ensure content is above the blur */
+}
+
+/* Optional: Highlight the score section further */
+.score-section {
+  background: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+/* Adjust existing styles as needed */
+.close-button,
+.roll-top,
+.level,
+.roll-bottom,
+.base-roll,
+.stars,
+.action-button {
+  position: relative;
+  z-index: 3; /* Ensure images are above the blur */
+}

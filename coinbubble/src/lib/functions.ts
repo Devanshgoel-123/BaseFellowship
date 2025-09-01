@@ -108,6 +108,9 @@ export async function initializeBubbles(): Promise<Bubble[]> {
   const adjustedRows = ROWS;
   const adjustedCols = COLS;
 
+  console.log("Initializing bubbles with ROWS:", adjustedRows, "COLS:", adjustedCols);
+  console.log("BUBBLE_RADIUS:", BUBBLE_RADIUS);
+
   for (let row = 0; row < adjustedRows; row++) {
     const colsInRow = row % 2 === 0 ? adjustedCols : adjustedCols - 1;
     for (let col = 0; col < colsInRow; col++) {
@@ -115,6 +118,11 @@ export async function initializeBubbles(): Promise<Bubble[]> {
         col * (BUBBLE_RADIUS * 2) +
         (row % 2 === 0 ? BUBBLE_RADIUS : BUBBLE_RADIUS * 2);
       const y = row * (BUBBLE_RADIUS * 1.7) + BUBBLE_RADIUS;
+      
+      if (row === adjustedRows - 1) { // Log bottom row positions
+        console.log(`Bottom row ${row}, col ${col}: x=${x}, y=${y}`);
+      }
+      
       newBubbles.push(generateRandomBubble(x, y, row, col));
     }
   }
@@ -261,8 +269,10 @@ export const calculateGridPosition = (x: number, y: number) => {
  * Check if a bubble is at the death line
  */
 export const checkDeathLine = (bubbles: Bubble[], canvasHeight: number): boolean => {
-  const deathLineY = canvasHeight - 200;
-  return bubbles.some((bubble) => bubble.y >= deathLineY);
+  const deathLineY = canvasHeight - 60; // Match the renderDeathLine position
+  
+  // Check if any bubble's bottom edge touches or crosses the death line
+  return bubbles.some((bubble) => (bubble.y + BUBBLE_RADIUS) >= deathLineY);
 };
 
 /**
