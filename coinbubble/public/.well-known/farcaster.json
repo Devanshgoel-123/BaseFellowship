@@ -2,11 +2,11 @@
     "miniapp": {
       "version": "1",
       "name": "Bubble_Shooting",
-      "homeUrl": "https://base-fellowship-bice.vercel.app",
-      "iconUrl": "https://base-fellowship-bice.vercel.app/icon.png",
-      "imageUrl": "https://base-fellowship-bice.vercel.app/api/opengraph-image",
+      "homeUrl": "https://bubble-shooters.vercel.app",
+      "iconUrl": "https://bubble-shooters.vercel.app/icon.png",
+      "imageUrl": "https://bubble-shooters.vercel.app/api/opengraph-image",
       "buttonTitle": "Launch Mini App",
-      "splashImageUrl": "https://base-fellowship-bice.vercel.app/splash.png",
+      "splashImageUrl": "https://bubble-shooters.vercel.app/splash.png",
       "splashBackgroundColor": "#f7f7f7",
       "webhookUrl": "https://api.neynar.com/f/app/30d8982f-02d4-4742-9d42-975b0fbce101/event"
     },
@@ -16,3 +16,4 @@
       "signature": "MHg5NDk2YTFiMzdkZjE0YjhkYmU3MWYxYmVmZWIxZjdlOWY0MGVhODBhMTVkYjFkYzViYWY0ZjMzODA0MjVlOTVmMWNkOWJiZDIzOTg2NmEzOTMxYzUwYmRjY2IxYmQ3MjRkYTUyNDFiMDJhYzgwYjg2MzQzYWZlMDA1MGZlN2Q1NDFi"
     }
   }
+  

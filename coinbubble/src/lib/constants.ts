@@ -15,7 +15,7 @@ import { type AccountAssociation } from '@farcaster/miniapp-core/src/manifest';
  * The base URL of the application.
  * Used for generating absolute URLs for assets and API endpoints.
  */
-export const APP_URL: string = process.env.NEXT_PUBLIC_URL!;
+export const APP_URL: string = process.env.NEXT_PUBLIC_URL || 'https://base-fellowship-bice.vercel.app';
 
 /**
  * The name of the mini app as displayed to users.
@@ -71,8 +71,11 @@ export const APP_SPLASH_BACKGROUND_COLOR: string = '#f7f7f7';
  * Used to associate the mini app with a Farcaster account.
  * If not provided, the mini app will be unsigned and have limited capabilities.
  */
-export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined =
-  undefined;
+export const APP_ACCOUNT_ASSOCIATION: AccountAssociation | undefined = {
+  header: "eyJmaWQiOjExNTAwNzIsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgxNTQ0QjBlMzNCZDQ1ZDNjMDhjOEZiNDhBNmQ2MDQxMDZjM0JEMDI3In0",
+  payload: "eyJkb21haW4iOiJiYXNlLWZlbGxvd3NoaXAtYmljZS52ZXJjZWwuYXBwIn0",
+  signature: "MHg5NDk2YTFiMzdkZjE0YjhkYmU3MWYxYmVmZWIxZjdlOWY0MGVhODBhMTVkYjFkYzViYWY0ZjMzODA0MjVlOTVmMWNkOWJiZDIzOTg2NmEzOTMxYzUwYmRjY2IxYmQ3MjRkYTUyNDFiMDJhYzgwYjg2MzQzYWZlMDA1MGZlN2Q1NDFi"
+};
 
 // --- UI Configuration ---
 /**
