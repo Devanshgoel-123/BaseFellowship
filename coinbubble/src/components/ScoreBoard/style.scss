@@ -74,14 +74,7 @@
     z-index: 10;
   }
 
-  .roll-bottom {
-    position: absolute;
-    top: 66%;
-    width: 85%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-  }
+
 
   .content-container {
     position: relative;
@@ -318,42 +311,59 @@
           gap: 1rem;
         }
 
-        .action-button {
-          width: 40px;
-          height: 40px;
+        .action-button-wrapper {
+          background: none;
+          border: none;
+          padding: 0;
           cursor: pointer;
-          transition: opacity 0.3s ease;
+          transition: transform 0.2s ease, opacity 0.2s ease;
+          
+g          &:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+          }
+          
+          &:active {
+            transform: scale(0.95);
+          }
+          
+          &:focus {
+            outline: none;
+          }
+        }
+
+        .action-button {
+          width: 50px;
+          height: 50px;
+          display: block;
+          pointer-events: none; // Prevent image from interfering with button clicks
           object-fit: contain;
 
           // Responsive sizing for width
           @media (max-width: 480px) {
-            width: 35px;
-            height: 35px;
+            width: 45px;
+            height: 45px;
           }
           
           @media (max-width: 360px) {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
           }
           
           // Responsive sizing for height
           @media (max-height: 700px) {
-            width: 35px;
-            height: 35px;
+            width: 45px;
+            height: 45px;
           }
           
           @media (max-height: 600px) {
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
           }
           
           @media (max-height: 500px) {
-            width: 25px;
-            height: 25px;
-          }
-
-          &:hover {
-            opacity: 0.8;
+            width: 35px;
+            height: 35px;
           }
         }
       }

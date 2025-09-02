@@ -22,14 +22,7 @@
     z-index: 10;
   }
   
-  .bottom-roll {
-    position: absolute;
-    bottom: 31%;
-    width: 85%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-  }
+
   
   .content-container {
     position: relative;
@@ -109,14 +102,81 @@
       }
     }
     
-    .start-button {
+    .start-button-wrapper {
       position: absolute;
       z-index: 1000;
-      width: 140px;
       bottom: 10%;
       left: 50%;
       transform: translateX(-50%);
+      background: none;
+      border: none;
+      padding: 0;
       cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      
+      // Responsive positioning
+      @media (max-width: 480px) {
+        bottom: 8%;
+      }
+      
+      @media (max-width: 360px) {
+        bottom: 6%;
+      }
+      
+      // Height-based responsive positioning
+      @media (max-height: 700px) {
+        bottom: 8%;
+      }
+      
+      @media (max-height: 600px) {
+        bottom: 6%;
+      }
+      
+      @media (max-height: 500px) {
+        bottom: 4%;
+      }
+      
+      &:hover {
+        transform: translateX(-50%) scale(1.05);
+        opacity: 0.9;
+      }
+      
+      &:active {
+        transform: translateX(-50%) scale(0.95);
+      }
+      
+      &:focus {
+        outline: none;
+      }
+    }
+    
+    .start-button {
+      width: 120px;
+      height: auto;
+      display: block;
+      pointer-events: none; // Prevent image from interfering with button clicks
+      
+      // Responsive sizing
+      @media (max-width: 480px) {
+        width: 100px;
+      }
+      
+      @media (max-width: 360px) {
+        width: 90px;
+      }
+      
+      // Height-based responsive sizing
+      @media (max-height: 700px) {
+        width: 110px;
+      }
+      
+      @media (max-height: 600px) {
+        width: 100px;
+      }
+      
+      @media (max-height: 500px) {
+        width: 90px;
+      }
     }
   }
 }

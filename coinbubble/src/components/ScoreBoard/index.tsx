@@ -38,8 +38,10 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
   };
 
   const handleReplay = () => {
+    console.log("Replay button clicked in ScoreBoard");
     setIsVisible(false);
     setTimeout(() => {
+      console.log("Calling onReplay function");
       onReplay();
     }, 300);
   };
@@ -73,12 +75,7 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
           className="level"
           alt="Level indicator"
         />
-        {/* Roll Bottom */}
-        <img
-          src="/assets/score_board/Roll_bottom.png"
-          className="roll-bottom"
-          alt="Roll bottom decoration"
-        />
+
         <div className="content-container">
           {/* Base SVG */}
           <img
@@ -145,18 +142,28 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
           {/* buttons section */}
           <div className="buttons-section">
             <div className="buttons-container">
-              <img
-                src="/assets/score_board/Home.svg"
-                alt="home"
-                className="action-button"
+              <button 
+                className="action-button-wrapper"
                 onClick={handleHome}
-              />
-              <img
-                src="/assets/score_board/Replay.svg"
-                alt="replay"
-                className="action-button"
+                aria-label="Go Home"
+              >
+                <img
+                  src="/assets/score_board/Home.svg"
+                  alt="home"
+                  className="action-button"
+                />
+              </button>
+              <button 
+                className="action-button-wrapper"
                 onClick={handleReplay}
-              />
+                aria-label="Replay Game"
+              >
+                <img
+                  src="/assets/score_board/Replay.svg"
+                  alt="replay"
+                  className="action-button"
+                />
+              </button>
             </div>
           </div>
         </div>
