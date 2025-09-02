@@ -9,6 +9,28 @@ import { Rubik } from "next/font/google";
 export const metadata: Metadata = {
   title: APP_NAME,
   description: APP_DESCRIPTION,
+  openGraph: {
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    url: 'https://base-fellowship-bice.vercel.app',
+    siteName: APP_NAME,
+    images: [
+      {
+        url: 'https://base-fellowship-bice.vercel.app/api/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: APP_NAME,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: APP_NAME,
+    description: APP_DESCRIPTION,
+    images: ['https://base-fellowship-bice.vercel.app/api/opengraph-image'],
+  },
 };
 
 export const viewport: Viewport = {
