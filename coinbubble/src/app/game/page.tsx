@@ -15,6 +15,7 @@ import { updateUserGameHistory } from "~/Services/user";
 import { useAccount } from "wagmi";
 import { GAME_DURATION } from "~/lib/constants";
 import { promise } from "zod/v4";
+import Link from "next/link";
 
 
 const GameCanvas = dynamicImport(
@@ -203,15 +204,37 @@ export default function GamePage() {
           />
         </div>
       )}
+
       {useGameStore.getState().isGameOver && showScoreBoard && (
-        <div className="absolute inset-0 z-50">
-          <ScoreBoard
-            onClose={handleScoreBoardClose}
-            onHome={handleScoreBoardHome}
-            onShare={handleScoreBoardShare}
-            onReplay={handleScoreBoardReplay}
-            scoringSystem={scoringSystem.current}
-          />
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-b from-[#35A5F7] to-[#152E92] rounded-3xl p-6 sm:p-8 max-w-sm w-full mx-4 relative overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
+            <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
+
+            <div className="relative z-10 text-center">
+              <h2 className="OverText text-2xl sm:text-3xl mb-4">Game Over</h2>
+              <p className="text-white/80 mb-6 text-sm sm:text-base">
+                Your score : {scoringSystem.current.getStats().totalPoints}
+              </p>
+              <div className="flex flex-col space-y-3">
+                <button
+                  onClick={async () => {
+                    console.log("Play Again clicked");
+                    await resetGame();
+                  }}
+                  className="w-full py-3 bg-white/90 hover:bg-white text-[#152E92] font-bold rounded-xl transition-colors touch-manipulation"
+                >
+                  Play Again
+                </button>
+                <Link
+                  href="/"
+                  className="block w-full py-3 bg-transparent hover:bg-white/10 text-white font-bold border border-white/30 rounded-xl transition-colors text-center touch-manipulation"
+                >
+                  Back to Home
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
