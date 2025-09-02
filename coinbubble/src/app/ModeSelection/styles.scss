@@ -1,37 +1,77 @@
-.gradient-text {
+  .gradient-text {
     background: linear-gradient(to bottom, #36ACFD, #004E7C);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
-    font-size: 22px;
+    font-size: 20px;
     line-height: 100%;
     font-weight: 700;
-    letter-spacing: 2.5px;
-    margin-top: -10px;
+    letter-spacing: 1.5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     font-family: "Montserrat";
+    
+    // Responsive font sizes
+    @media (max-width: 480px) {
+      font-size: 18px;
+      letter-spacing: 1px;
+    }
+    
+    @media (max-width: 360px) {
+      font-size: 16px;
+      letter-spacing: 0.5px;
+    }
   }
   
 
   .gradient-sub-text {
     position: absolute;
-    bottom: 40px;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
     color: #ffffff;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
-    letter-spacing: -1%;
-    width:80%;
+    letter-spacing: -0.5%;
+    width: 85%;
+    text-align: center;
+    line-height: 110%;
     font-family: "Montserrat";
+    
+    // Responsive font sizes
+    @media (max-width: 480px) {
+      font-size: 11px;
+      width: 90%;
+    }
+    
+    @media (max-width: 360px) {
+      font-size: 10px;
+      width: 95%;
+    }
   }
 
   .ModeText {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: 2.5px;
-    margin-top: -10px;
+    letter-spacing: 2px;
+    margin-top: 0px;
     font-family: "Montserrat";
-    margin-bottom: 30px;
-
+    margin-bottom: 20px;
+    text-align: center;
+    
+    // Responsive font sizes
+    @media (max-width: 480px) {
+      font-size: 20px;
+      letter-spacing: 1.5px;
+      margin-bottom: 15px;
+    }
+    
+    @media (max-width: 360px) {
+      font-size: 18px;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
   }
 
 .scoreboard-container {

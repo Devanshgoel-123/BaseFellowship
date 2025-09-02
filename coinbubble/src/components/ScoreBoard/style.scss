@@ -85,8 +85,18 @@
 
   .content-container {
     position: relative;
-    width: 80%;
+    width: 85%;
     height: 50%;
+    max-width: 400px;
+    
+    // Responsive width adjustments
+    @media (max-width: 480px) {
+      width: 90%;
+    }
+    
+    @media (max-width: 360px) {
+      width: 95%;
+    }
 
     .base-roll {
       display: block;
@@ -114,7 +124,7 @@
 
       .info-content {
         background-color: transparent;
-        padding: 1.5rem;
+        padding: 1.5rem 1.5rem 4rem 1.5rem; // Add bottom padding for buttons
         margin-top: 100px;
         border-radius: 0.5rem;
         width: 100%;
@@ -123,6 +133,22 @@
         flex-direction: column;
         justify-content: flex-start;
         gap: 20px;
+        
+        // Adjust padding for smaller height screens
+        @media (max-height: 700px) {
+          padding: 1.2rem 1.5rem 3.5rem 1.5rem;
+          gap: 15px;
+        }
+        
+        @media (max-height: 600px) {
+          padding: 1rem 1.5rem 3rem 1.5rem;
+          gap: 12px;
+        }
+        
+        @media (max-height: 500px) {
+          padding: 0.8rem 1.5rem 2.5rem 1.5rem;
+          gap: 10px;
+        }
 
         .score-section {
           margin-bottom: 0.5rem;
@@ -256,22 +282,75 @@
 
     .buttons-section {
       position: absolute;
-      inset: 0;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
       display: flex;
-      align-items: center;
       justify-content: center;
-      top: 60%;
+      z-index: 100;
+      
+      // Adjust positioning for smaller height screens
+      @media (max-height: 700px) {
+        bottom: 6%;
+      }
+      
+      @media (max-height: 600px) {
+        bottom: 4%;
+      }
+      
+      @media (max-height: 500px) {
+        bottom: 2%;
+      }
 
       .buttons-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 1.25rem;
+        gap: 1.5rem;
+        
+        // Responsive gap
+        @media (max-width: 480px) {
+          gap: 1.25rem;
+        }
+        
+        @media (max-width: 360px) {
+          gap: 1rem;
+        }
 
         .action-button {
-          width: 70px;
+          width: 40px;
+          height: 40px;
           cursor: pointer;
           transition: opacity 0.3s ease;
+          object-fit: contain;
+
+          // Responsive sizing for width
+          @media (max-width: 480px) {
+            width: 35px;
+            height: 35px;
+          }
+          
+          @media (max-width: 360px) {
+            width: 30px;
+            height: 30px;
+          }
+          
+          // Responsive sizing for height
+          @media (max-height: 700px) {
+            width: 35px;
+            height: 35px;
+          }
+          
+          @media (max-height: 600px) {
+            width: 30px;
+            height: 30px;
+          }
+          
+          @media (max-height: 500px) {
+            width: 25px;
+            height: 25px;
+          }
 
           &:hover {
             opacity: 0.8;

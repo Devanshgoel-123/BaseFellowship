@@ -77,32 +77,34 @@ export default function ModeSelection() {
     <div className="relative w-full h-screen overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(94.6%_54.54%_at_50%_50%,#35A5F7_0%,#152E92_100%)]">
         {/* Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-start pt-[120px] px-8 bg-[url('/assets/backgrounds/gameMode.svg')] bg-cover bg-center">
-          <h1 className="ModeText">Choose Your Mode</h1>
+        <div className="relative z-10 h-full flex flex-col items-center justify-between pt-[80px] pb-[80px] px-8 bg-[url('/assets/backgrounds/gameMode.svg')] bg-cover bg-center">
+          <div className="flex flex-col items-center">
+            <h1 className="ModeText">Choose Your Mode</h1>
 
-          <div className="w-[90vw] space-y-6 mt-10 flex flex-col gap-10">
+            <div className="w-[90vw] space-y-4 mt-6 flex flex-col gap-6">
             {Buttons.map((item, index) => {
               return (
                 <button
                   key={index}
                   onClick={item.onClick}
-                  className="w-[100%] h-[180px] bg-cover bg-center bg-[#05245e] rounded-2xl p-6 hover:bg-white/30 transition-all duration-300 transform hover:scale-105 flex flex-col items-center relative rounded-3xl opacity-70"
+                  className="w-[100%] h-[150px] bg-cover bg-center bg-[#05245e] rounded-3xl p-4 hover:bg-white/30 transition-all duration-300 transform hover:scale-105 flex flex-col items-center relative opacity-70"
                 >
-                  <div className="absolute top-[-30px] w-[70px] h-[70px] bg-[#b1cadc] rounded-full flex items-center justify-center mb-4">
+                  <div className="absolute top-[-25px] w-[60px] h-[60px] bg-[#b1cadc] rounded-full flex items-center justify-center mb-4">
                     <Image
-                      height={40}
-                      width={40}
+                      height={32}
+                      width={32}
                       src={item.src}
                       alt="controller"
                     />
                   </div>
-                  <h2 className="absolute top-[60px] text-2xl font-bold text-white gradient-text">
+                  <h2 className="absolute top-[35px] text-xl font-bold text-white gradient-text">
                     {item.name}
                   </h2>
                   <p className="gradient-sub-text">{item.text}</p>
                 </button>
               );
             })}
+            </div>
           </div>
 
           <BottomNavbar />
