@@ -78,7 +78,7 @@ export const updateUserGameHistory = async ({
         console.log("The update user history",hitScores,USER_ADDRESS,normalPoints)
         const response = await axios.post(`${BASE_USER_URL}/users/updateHits`,{
                 hitScores,
-                userAddress:USER_ADDRESS,
+                userAddress:userAddress,
                 normalPoints
         })
         return response.data

@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import './style.scss';
 import { ScoringSystem } from '~/lib/functions';
-import { useGameStore } from '~/store/gameStats';
 import { randomCreators } from '~/Services/creator';
 
 interface ScoreBoardProps {
@@ -22,16 +21,10 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 50);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
-  const handleClose = () => {
-    setIsVisible(false);
-    setTimeout(() => {
-      onClose();
-    }, 300); // Wait for fade-out animation
-  };
 
   const handleHome = () => {
     setIsVisible(false);
@@ -50,18 +43,24 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
       onReplay();
     }, 300);
   };
-
+ 
+  const filterCoins=Object.values(
+    scoringSystem.getCreatorBubblesPopped().reduce(
+      (acc: Record<string, { creatorPfp: string; points: number }>, item) => {
+        const key = item.creatorPfp.toLowerCase();
+        if (!acc[key]) {
+          acc[key] = { creatorPfp: item.creatorPfp, points: 0 };
+        }
+        acc[key].points += item.points;
+        return acc;
+      },
+      {}
+    )
+  )
   return (
     <div className={`scoreboard-container ${isVisible ? 'visible' : ''}`}>
       <div className="blur-background"></div>
       <div className="scoreboard">
-        {/* close button */}
-        <img
-          src="/assets/score_board/Close.svg"
-          className="close-button"
-          onClick={handleClose}
-          alt="Close button"
-        />
         {/* Roll Top */}
         <img
           src="/assets/score_board/Roll_top.png"
@@ -95,10 +94,12 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
           />
           {/* Information Area */}
           <div className="info-area">
-            <div className="info-content">
+            <div className="info-content" style={{
+              "marginTop": filterCoins.length > 2 ? "100px" : "120px"
+            }}>
               {/* Score Section */}
               <div className="score-section">
-                <span className="label">Your Score: </span>
+                <span className="label">Your Score : </span>
                 <span className="value">{scoringSystem.getStats().totalPoints}</span>
               </div>
               {/* Creator Coin Section */}
@@ -109,47 +110,36 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
                   alt="coin"
                   className="coin-icon inline"
                 />
-                <span className="value">{scoringSystem.getCreatorBubblesPopped().length}</span>
+                <span className="value">{filterCoins.length}</span>
               </div>
               {/* Coin Grid */}
               <div className="coin-grid">
-                <div className="grid-label">Value</div>
+                <div className="grid-label">Value : </div>
                 <div className="coin-values">
-                  {Object.values(
-                    scoringSystem.getCreatorBubblesPopped().reduce(
-                      (acc: Record<string, { creatorPfp: string; points: number }>, item) => {
-                        const key = item.creatorPfp.toLowerCase();
-                        if (!acc[key]) {
-                          acc[key] = { creatorPfp: item.creatorPfp, points: 0 };
-                        }
-                        acc[key].points += item.points;
-                        return acc;
-                      },
-                      {}
-                    )
-                  ).map((creator, index) => {
-                    const creatorPfp = randomCreators.find(
-                      (item) => item.coinAddress.toLowerCase() === creator.creatorPfp.toLowerCase()
-                    )?.pfp;
+                  {filterCoins
+                    .slice(0, 4) // 👉 only take max 4 creators
+                    .map((creator, index) => {
+                      const creatorData = randomCreators.find(
+                        (item) => item.coinAddress.toLowerCase() === creator.creatorPfp.toLowerCase()
+                      );
 
-                    return (
-                      <div key={index} className="coin-item">
-                        <div className="coin-value-row">
-                          <img
-                            src={creatorPfp}
-                            alt={creator.creatorPfp}
-                            className="coin-icon"
-                          />
-                          <div className="coin-amount">
-                            {creator.points * 100}
+                      return (
+                        <div key={index} className="coin-item">
+                          <div className="coin-value-row">
+                            <img
+                              src={creatorData?.pfp}
+                              alt={creator.creatorPfp}
+                              className="coin-icon"
+                            />
+                            <div className="coin-amount">{(creator.points * 100)}</div>
                           </div>
+                          <div className="coin-name">{creatorData?.displayName}</div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
-
               </div>
+
             </div>
           </div>
           {/* buttons section */}
@@ -160,12 +150,6 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
                 alt="home"
                 className="action-button"
                 onClick={handleHome}
-              />
-              <img
-                src="/assets/score_board/Share.svg"
-                alt="share"
-                className="action-button"
-                onClick={handleShare}
               />
               <img
                 src="/assets/score_board/Replay.svg"

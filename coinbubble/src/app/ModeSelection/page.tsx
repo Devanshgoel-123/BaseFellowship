@@ -7,6 +7,7 @@ import "./styles.scss";
 import { BottomNavbar } from "~/components/BottomNavbar";
 import { StartScreen } from "~/components/StartScreen";
 import { useGameStore } from "~/store/gameStats";
+export const dynamic = "force-dynamic";
 
 export default function ModeSelection() {
   const router = useRouter();

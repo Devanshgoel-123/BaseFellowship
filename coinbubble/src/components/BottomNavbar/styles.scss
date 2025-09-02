@@ -16,10 +16,17 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 0px;
     cursor: pointer;
+    a{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
     span{
-        font-size: 12px;
+        font-size: 14px;
         font-family: "Rubik";
         font-weight: 500;
         line-height: 150%;

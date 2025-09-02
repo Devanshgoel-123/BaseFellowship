@@ -11,12 +11,12 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-  
+
   &.visible {
     opacity: 1;
     visibility: visible;
   }
-  
+
   .blur-background {
     position: absolute;
     top: 0;
@@ -37,24 +37,25 @@
   height: 100vh;
   transform: scale(0.9);
   transition: transform 0.3s ease-in-out;
-  
+  background-color: transparent;
   .scoreboard-container.visible & {
     transform: scale(1);
   }
-  
+
   .close-button {
     position: absolute;
-    width: 2.5rem;
+    height: 55px;
+    width: 55px;
     cursor: pointer;
-    top: 15%;
-    right: 3%;
+    top: 10%;
+    right: 7%;
     transition: opacity 0.3s ease;
-    
+
     &:hover {
       opacity: 0.8;
     }
   }
-  
+
   .roll-top {
     position: absolute;
     top: 20%;
@@ -63,7 +64,7 @@
     transform: translateX(-50%);
     z-index: 10;
   }
-  
+
   .level {
     position: absolute;
     width: 220px;
@@ -72,156 +73,206 @@
     transform: translateX(-50%);
     z-index: 10;
   }
-  
+
   .roll-bottom {
     position: absolute;
-    bottom: 23%;
+    top: 66%;
     width: 85%;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
   }
-  
+
   .content-container {
     position: relative;
     width: 80%;
-    
+    height: 50%;
+
     .base-roll {
       display: block;
     }
-    
+
     .stars {
       position: absolute;
-      top: 3%;
+      top: -30px;
       left: 51%;
-      width: 135px;
+      width: 190px;
+      height: 200px;
       transform: translateX(-50%);
     }
-    
+
     .info-area {
       position: absolute;
       inset: 0;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 0 2rem;
-      
+      justify-content: flex-start;
+      padding: 0 1rem;
+      height: 70%;
+      width: 100%;
+
       .info-content {
         background-color: transparent;
         padding: 1.5rem;
+        margin-top: 100px;
         border-radius: 0.5rem;
-        max-width: 28rem;
+        width: 100%;
         font-family: sans-serif;
-        
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 20px;
+
         .score-section {
           margin-bottom: 0.5rem;
-          
+          padding: 0;
+          background-color: transparent;
+          border: none;
+          box-shadow: none;
+          margin-bottom: 0;
           .label {
-            color: #2563eb;
-            font-size: 1.125rem;
-            font-weight: 500;
+            font-family: "Rubik";
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 100%;
+            color: #004e7c;
           }
-          
+
           .value {
-            color: #2563eb;
-            font-size: 1.25rem;
-            font-weight: bold;
+            font-family: "Rubik", sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 100%;
+            letter-spacing: 0;
+
+            /* Gradient text */
+            background: linear-gradient(90deg, #36acfd, #004e7c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            /* Subtle shadow closer to Figma */
+            text-shadow: -1px 1px 0 rgba(255, 255, 255, 0.1);
           }
         }
-        
+
         .creator-coin-section {
-          margin-bottom: 1rem;
           display: flex;
           flex-direction: row;
-          
+
           .label {
-            color: #2563eb;
-            font-size: 1.125rem;
-            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: "Rubik";
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 100%;
+            color: #004e7c;
           }
-          
+
           .coin-icon {
             width: 1rem;
             border-radius: 50%;
-            height: 20px;
+            height: 15px;
             margin-top: 3px;
-            width: 20px;
+            width: 15px;
             margin-inline: 0.2rem;
           }
-          
+
           .value {
-            color: #2563eb;
-            font-size: 1.25rem;
-            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: "Rubik", sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 100%;
+            letter-spacing: 0;
+
+            /* Gradient text */
+            background: linear-gradient(90deg, #36acfd, #004e7c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            /* Subtle shadow closer to Figma */
+            text-shadow: -1px 1px 0 rgba(255, 255, 255, 0.1);
           }
         }
-        
+
         .coin-grid {
           display: grid;
           grid-template-columns: auto 1fr;
-          
-          .grid-label {
-            color: #2563eb;
-            font-size: 1.125rem;
-            font-weight: 500;
-            margin-right: 1rem;
-          }
-          
-          .coin-values {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            
-            .coin-item {
-              .coin-value-row {
-                display: flex;
-                align-items: center;
-                
-                .coin-icon {
-                  width: 1rem;
-                  margin-right: 0.5rem;
-                  border-radius: 50%;
-                  height: 30px;
-                  width: 30px;
-                }
-                
-                .coin-amount {
-                  color: #2563eb;
-                  font-size: 1.25rem;
-                  font-weight: bold;
-                }
-              }
-              
-              .coin-name {
-                color: #2563eb;
-                font-size: 0.875rem;
-                margin-left: 1.5rem;
-              }
-            }
-          }
+        }
+
+        .grid-label {
+          font-family: "Rubik";
+          font-weight: 400;
+          font-size: 18px;
+          line-height: 100%;
+          color: #004e7c;
+        }
+
+        .coin-values {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr); /* 2 per row */
+          gap: 1rem;
+          margin-left: 10px;
+        }
+
+        .coin-item {
+          text-align: center;
+        }
+
+        .coin-value-row {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .coin-icon {
+          height: 22px;
+          width: 22px;
+          border-radius: 50%;
+          margin-right: 0.5rem;
+        }
+
+        .coin-amount {
+          color: #0d659c;
+          font-size: 16px;
+          font-family: "Rubik";
+          font-weight: 600;
+        }
+
+        .coin-name {
+          color: #04436d;
+          font-size: 12px;
+          line-height: 100%;
+          display: flex;
+          justify-content: flex-end;
         }
       }
     }
-    
+
     .buttons-section {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      top: 70%;
-      
+      top: 60%;
+
       .buttons-container {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 1.25rem;
-        
+
         .action-button {
           width: 70px;
           cursor: pointer;
           transition: opacity 0.3s ease;
-          
+
           &:hover {
             opacity: 0.8;
           }
