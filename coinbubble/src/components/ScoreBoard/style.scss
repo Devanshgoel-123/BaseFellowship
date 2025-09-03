@@ -275,7 +275,7 @@
 
     .buttons-section {
       position: absolute;
-      bottom: 4%;
+      bottom: 15px;
       left: 50%;
       transform: translateX(-50%);
       width: 100%;
@@ -285,15 +285,15 @@
       
       // Adjust positioning for smaller height screens
       @media (max-height: 700px) {
-        bottom: 3%;
+        bottom: 10px;
       }
       
       @media (max-height: 600px) {
-        bottom: 2%;
+        bottom: 6px;
       }
       
       @media (max-height: 500px) {
-        bottom: 1%;
+        bottom: 4px;
       }
 
       .buttons-container {
