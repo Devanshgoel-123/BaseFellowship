@@ -1,7 +1,7 @@
 {
     "miniapp": {
       "version": "1",
-      "name": "Bubble_Shooting",
+      "name": "Bubble_Banger",
       "homeUrl": "https://bubble-shooters.vercel.app",
       "iconUrl": "https://bubble-shooters.vercel.app/app_icon.jpg",
       "imageUrl": "https://bubble-shooters.vercel.app/api/opengraph-image",
