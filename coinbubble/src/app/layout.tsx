@@ -39,6 +39,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: 'cover',
+  height: 'device-height',
 };
 
 
@@ -63,9 +64,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`h-full ${montserrat.className} ${rubik.className}`}>
-      <body className="min-h-screen">
+      <body className="h-screen overflow-hidden pb-16 md:pb-0">
         <ClientBackground />
-        <div className="relative z-10">
+        <div className="relative z-10 h-full">
           <Providers session={session}>
             {children}
           </Providers>

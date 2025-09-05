@@ -25,12 +25,7 @@ export const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
         className="level"
         alt="Level"
       />
-      {/* Bottom Roll */}
-      <img
-        src="/assets/start_screen/Roll_bottom.png"
-        className="bottom-roll"
-        alt="Bottom Roll"
-      />
+
       <div className="content-container">
         {/* base */}
         <img
@@ -52,12 +47,17 @@ export const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => {
           </div>
         </div>
         {/* Start Button */}
-        <img
-          src="/assets/start_screen/Start-button.png"
-          className="start-button"
+        <button 
+          className="start-button-wrapper"
           onClick={handleStart}
-          alt="Start Button"
-        />
+          aria-label="Start Game"
+        >
+          <img
+            src="/assets/start_screen/Start-button.png"
+            className="start-button"
+            alt="Start Button"
+          />
+        </button>
       </div>
     </div>
   )

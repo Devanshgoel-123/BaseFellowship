@@ -171,7 +171,7 @@ export default function GamePage() {
   };
 
   return (
-    <div className="gameWrapperDiv w-full h-screen overflow-hidden">
+    <div className="gameWrapperDiv w-full h-screen overflow-hidden flex flex-col">
       {/* Mobile-responsive score display */}
       <div className="userScore fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm p-4">
         <div className="flex justify-between items-center max-w-md mx-auto">
@@ -192,7 +192,7 @@ export default function GamePage() {
         </div>
       </div>
       {useGameStore.getState().isGameOn && (
-        <div className="gameCanvasContainer w-full h-full pt-20">
+        <div className="gameCanvasContainer w-full flex-1 pt-20">
           <GameCanvas
             bubbles={bubbles}
             setBubbles={setBubbles}

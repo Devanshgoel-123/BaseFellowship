@@ -43,8 +43,10 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
   };
 
   const handleReplay = () => {
+    console.log("Replay button clicked in ScoreBoard");
     setIsVisible(false);
     setTimeout(() => {
+      console.log("Calling onReplay function");
       onReplay();
     }, 300);
   };
@@ -154,18 +156,28 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
           {/* buttons section */}
           <div className="buttons-section">
             <div className="buttons-container">
-              <img
-                src="/assets/score_board/Home.svg"
-                alt="home"
-                className="action-button"
+              <button
+                className="action-button-wrapper"
                 onClick={handleHome}
-              />
-              <img
-                src="/assets/score_board/Replay.svg"
-                alt="replay"
-                className="action-button"
+                aria-label="Go Home"
+              >
+                <img
+                  src="/assets/score_board/Home.svg"
+                  alt="home"
+                  className="action-button"
+                />
+              </button>
+              <button
+                className="action-button-wrapper"
                 onClick={handleReplay}
-              />
+                aria-label="Replay Game"
+              >
+                <img
+                  src="/assets/score_board/Replay.svg"
+                  alt="replay"
+                  className="action-button"
+                />
+              </button>
             </div>
           </div>
         </div>
