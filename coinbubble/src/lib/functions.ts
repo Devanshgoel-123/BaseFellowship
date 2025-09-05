@@ -1,80 +1,105 @@
-
-import { ShootingBubble, Bubble } from './bubbleType';
-import { ROWS, COLORS, COLS, BUBBLE_RADIUS, BALL_BLACK } from './constants';
-import { getRandomCreators } from '~/Services/creator';
+import { ShootingBubble, Bubble } from "./bubbleType";
+import { ROWS, COLORS, COLS, BUBBLE_RADIUS, BALL_BLACK } from "./constants";
+import { getRandomCreators } from "~/Services/creator";
 
 export function generateBubbleConfigs(
-    rows: number = 6, // number of rows
-    minBubbles: number = 5, // min bubbles in a row
-    maxBubbles: number = 10, // max bubbles in a row
-    bubbleSize: number = 70, // base bubble size
-    ySpacing: number = 10 // space between rows
-  ): Array<{ x: number; y: number; width: number; height: number; rotation: number }> {
-    
-    const configs: Array<{ x: number; y: number; width: number; height: number; rotation: number }> = [];
-  
-    for (let row = 0; row < rows; row++) {
-      const bubbleCount = Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
-  
-      // Calculate row width and offset to center
-      const totalRowWidth = bubbleCount * bubbleSize;
-      const xOffset = (500 - totalRowWidth) / 2; // Assuming canvas width 500px
-  
-      for (let col = 0; col < bubbleCount; col++) {
-        const randomSize = bubbleSize + Math.floor(Math.random() * 15 - 7); // Slight size variation
-        const x = xOffset + col * bubbleSize + Math.random() * 5; // small jitter
-        const y = row * (bubbleSize + ySpacing) + Math.random() * 3;
-        const rotation = Math.floor(Math.random() * 30 - 15); // -15° to +15°
-  
-        configs.push({
-          x,
-          y,
-          width: randomSize,
-          height: randomSize,
-          rotation
-        });
-      }
-    }
-  
-    return configs;
-  }
-  
-export function addBubbleRow(
-    existingConfigs: Array<{ x: number; y: number; width: number; height: number; rotation: number }>,
-    minBubbles: number = 8,
-    maxBubbles: number = 10,
-    bubbleSize: number = 50
-  ): Array<{ x: number; y: number; width: number; height: number; rotation: number }> {
-  
-    const canvasWidth = 500;
-  
-    existingConfigs.forEach(bubble => {
-      bubble.y += (bubbleSize - 5); // Maintain hexagonal packing
-    });
-  
-    const bubbleCount = Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
-    const rowOffset = (existingConfigs.length > 0 && existingConfigs[0].y % (bubbleSize - 5) !== 0) ? 0 : bubbleSize / 2;
+  rows: number = 6, // number of rows
+  minBubbles: number = 5, // min bubbles in a row
+  maxBubbles: number = 10, // max bubbles in a row
+  bubbleSize: number = 70, // base bubble size
+  ySpacing: number = 10 // space between rows
+): Array<{
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+}> {
+  const configs: Array<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+  }> = [];
+
+  for (let row = 0; row < rows; row++) {
+    const bubbleCount =
+      Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
+
+    // Calculate row width and offset to center
     const totalRowWidth = bubbleCount * bubbleSize;
-    const xOffset = (canvasWidth - totalRowWidth) / 2;
-  
-    // Add new row at top
+    const xOffset = (500 - totalRowWidth) / 2; // Assuming canvas width 500px
+
     for (let col = 0; col < bubbleCount; col++) {
-      const x = xOffset + rowOffset + col * bubbleSize;
-      const y = 0;
-  
-      existingConfigs.push({
+      const randomSize = bubbleSize + Math.floor(Math.random() * 15 - 7); // Slight size variation
+      const x = xOffset + col * bubbleSize + Math.random() * 5; // small jitter
+      const y = row * (bubbleSize + ySpacing) + Math.random() * 3;
+      const rotation = Math.floor(Math.random() * 30 - 15); // -15° to +15°
+
+      configs.push({
         x,
         y,
-        width: bubbleSize,
-        height: bubbleSize,
-        rotation: 0
+        width: randomSize,
+        height: randomSize,
+        rotation,
       });
     }
-  
-    return existingConfigs;
+  }
+
+  return configs;
 }
-  
-  
+
+export function addBubbleRow(
+  existingConfigs: Array<{
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    rotation: number;
+  }>,
+  minBubbles: number = 8,
+  maxBubbles: number = 10,
+  bubbleSize: number = 50
+): Array<{
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+}> {
+  const canvasWidth = 500;
+
+  existingConfigs.forEach((bubble) => {
+    bubble.y += bubbleSize - 5; // Maintain hexagonal packing
+  });
+
+  const bubbleCount =
+    Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
+  const rowOffset =
+    existingConfigs.length > 0 && existingConfigs[0].y % (bubbleSize - 5) !== 0
+      ? 0
+      : bubbleSize / 2;
+  const totalRowWidth = bubbleCount * bubbleSize;
+  const xOffset = (canvasWidth - totalRowWidth) / 2;
+
+  // Add new row at top
+  for (let col = 0; col < bubbleCount; col++) {
+    const x = xOffset + rowOffset + col * bubbleSize;
+    const y = 0;
+
+    existingConfigs.push({
+      x,
+      y,
+      width: bubbleSize,
+      height: bubbleSize,
+      rotation: 0,
+    });
+  }
+
+  return existingConfigs;
+}
+
 /**
  * Generate a random color from the available colors
  */
@@ -108,9 +133,6 @@ export async function initializeBubbles(): Promise<Bubble[]> {
   const adjustedRows = ROWS;
   const adjustedCols = COLS;
 
-  console.log("Initializing bubbles with ROWS:", adjustedRows, "COLS:", adjustedCols);
-  console.log("BUBBLE_RADIUS:", BUBBLE_RADIUS);
-
   for (let row = 0; row < adjustedRows; row++) {
     const colsInRow = row % 2 === 0 ? adjustedCols : adjustedCols - 1;
     for (let col = 0; col < colsInRow; col++) {
@@ -118,11 +140,12 @@ export async function initializeBubbles(): Promise<Bubble[]> {
         col * (BUBBLE_RADIUS * 2) +
         (row % 2 === 0 ? BUBBLE_RADIUS : BUBBLE_RADIUS * 2);
       const y = row * (BUBBLE_RADIUS * 1.7) + BUBBLE_RADIUS;
-      
-      if (row === adjustedRows - 1) { // Log bottom row positions
+
+      if (row === adjustedRows - 1) {
+        // Log bottom row positions
         console.log(`Bottom row ${row}, col ${col}: x=${x}, y=${y}`);
       }
-      
+
       newBubbles.push(generateRandomBubble(x, y, row, col));
     }
   }
@@ -137,7 +160,8 @@ export async function initializeBubbles(): Promise<Bubble[]> {
   selectedIndices.forEach((index) => {
     const bubble = newBubbles[index];
     bubble.color = BALL_BLACK;
-    bubble.creator = randomCreators[Math.floor(Math.random() * randomCreators.length)];
+    bubble.creator =
+      randomCreators[Math.floor(Math.random() * randomCreators.length)];
   });
   console.log("newBubbles", newBubbles);
   return newBubbles;
@@ -190,7 +214,7 @@ export const findFloatingBubbles = (bubbles: Bubble[]): Bubble[] => {
 
   // Find all bubbles connected to the top row
   const topRowBubbles = bubbles.filter((bubble) => bubble.row === 0);
-  
+
   const findConnectedToTop = (bubble: Bubble) => {
     const key = `${bubble.row}-${bubble.col}`;
     if (visited.has(key)) return;
@@ -225,26 +249,25 @@ export const addNewRowAtTop = (
 ): Bubble[] => {
   const newRow: Bubble[] = [];
   const maxBubblesPerRow = Math.floor(canvasWidth / (BUBBLE_RADIUS * 1.5));
-  
+
   // Determine random start and end positions for the connected group
   const minBubbles = Math.max(3, Math.floor(maxBubblesPerRow * 0.8)); // At least 80% of max
-  const maxBubbles = Math.min(maxBubblesPerRow, Math.floor(maxBubblesPerRow * 0.9)); // At most 90% of max
-  const groupSize = Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
-  
+  const maxBubbles = Math.min(
+    maxBubblesPerRow,
+    Math.floor(maxBubblesPerRow * 0.9)
+  ); // At most 90% of max
+  const groupSize =
+    Math.floor(Math.random() * (maxBubbles - minBubbles + 1)) + minBubbles;
+
   // Random start position
-  const startPosition = Math.floor(Math.random() * (maxBubblesPerRow - groupSize + 1));
-  
+  const startPosition = Math.floor(
+    Math.random() * (maxBubblesPerRow - groupSize + 1)
+  );
+
   // Create connected group of bubbles
   for (let i = 0; i < groupSize; i++) {
     const x = BUBBLE_RADIUS + (startPosition + i) * (BUBBLE_RADIUS * 2);
-    newRow.push(
-      generateRandomBubble(
-        x,
-        BUBBLE_RADIUS,
-        0,
-        startPosition + i
-      )
-    );
+    newRow.push(generateRandomBubble(x, BUBBLE_RADIUS, 0, startPosition + i));
   }
 
   const movedBubbles = bubbles.map((bubble) => ({
@@ -268,11 +291,14 @@ export const calculateGridPosition = (x: number, y: number) => {
 /**
  * Check if a bubble is at the death line
  */
-export const checkDeathLine = (bubbles: Bubble[], canvasHeight: number): boolean => {
+export const checkDeathLine = (
+  bubbles: Bubble[],
+  canvasHeight: number
+): boolean => {
   const deathLineY = canvasHeight - 60; // Match the renderDeathLine position
-  
+
   // Check if any bubble's bottom edge touches or crosses the death line
-  return bubbles.some((bubble) => (bubble.y + BUBBLE_RADIUS) >= deathLineY);
+  return bubbles.some((bubble) => bubble.y + BUBBLE_RADIUS >= deathLineY);
 };
 
 /**
@@ -288,7 +314,7 @@ export const calculateAimAngle = (
   const x = clientX - canvasRect.left;
   const y = clientY - canvasRect.top;
   const angle = Math.atan2(y - shooterY, x - shooterX);
-  
+
   // Constrain angle to valid shooting range
   if (angle > -Math.PI * 0.9 && angle < -Math.PI * 0.1) {
     return angle;
@@ -315,7 +341,6 @@ export const createShootingBubble = (
   };
 };
 
-
 interface CanvasRendererProps {
   ctx: CanvasRenderingContext2D;
   width: number;
@@ -329,14 +354,18 @@ let bgLoaded = false;
 const loadBackgroundImage = () => {
   return new Promise<void>((resolve) => {
     bgImage = new Image();
-    bgImage.src = '/assets/backgrounds/underwaterbg.svg';
+    bgImage.src = "/assets/backgrounds/underwaterbg.svg";
     bgImage.onload = () => {
       bgLoaded = true;
       resolve();
     };
   });
 };
-export const renderBackground = async ({ ctx, width, height }: CanvasRendererProps) => {
+export const renderBackground = async ({
+  ctx,
+  width,
+  height,
+}: CanvasRendererProps) => {
   if (!bgLoaded) {
     await loadBackgroundImage();
   }
@@ -346,10 +375,13 @@ export const renderBackground = async ({ ctx, width, height }: CanvasRendererPro
   }
 };
 
-
-export const renderDeathLine = ({ ctx, width, height }: CanvasRendererProps) => {
+export const renderDeathLine = ({
+  ctx,
+  width,
+  height,
+}: CanvasRendererProps) => {
   const deathLineY = height - 60;
-  
+
   // Death line
   ctx.strokeStyle = "#EF4444"; // BALL_RED
   ctx.lineWidth = 3;
@@ -370,7 +402,6 @@ export const renderDeathLine = ({ ctx, width, height }: CanvasRendererProps) => 
 /**
  * Check if a bubble is at the death line
  */
-
 
 interface GameLogicProps {
   shootingBubble: ShootingBubble;
@@ -406,7 +437,10 @@ export const checkCollision = ({
     shootingBubble.x >= canvasWidth - BUBBLE_RADIUS
   ) {
     shouldBounce = true;
-    newX = shootingBubble.x <= BUBBLE_RADIUS ? BUBBLE_RADIUS : canvasWidth - BUBBLE_RADIUS;
+    newX =
+      shootingBubble.x <= BUBBLE_RADIUS
+        ? BUBBLE_RADIUS
+        : canvasWidth - BUBBLE_RADIUS;
   }
 
   // Ceiling collision - stick
@@ -441,7 +475,15 @@ export const checkCollision = ({
     }
   }
 
-  return { collision, collisionBubble, newX, newY, shouldBounce, creatorHit, creatorBubble };
+  return {
+    collision,
+    collisionBubble,
+    newX,
+    newY,
+    shouldBounce,
+    creatorHit,
+    creatorBubble,
+  };
 };
 
 export const handleBubblePlacement = (
@@ -455,7 +497,7 @@ export const handleBubblePlacement = (
   shouldAddNewRow: boolean;
 } => {
   const { row, col } = calculateGridPosition(newX, newY);
-  
+
   const newBubble: Bubble = {
     x: newX,
     y: newY,
@@ -465,20 +507,19 @@ export const handleBubblePlacement = (
   };
 
   const updatedBubbles = [...bubbles, newBubble];
-  const connectedBubbles = findConnectedBubbles(updatedBubbles, newBubble).filter(
-    (bubble) => bubble.color === newBubble.color
-  );
+  const connectedBubbles = findConnectedBubbles(
+    updatedBubbles,
+    newBubble
+  ).filter((bubble) => bubble.color === newBubble.color);
 
   let shouldAddNewRow = false;
-
 
   if (connectedBubbles.length >= 3) {
     // Remove connected bubbles and find floating ones
     const remainingBubbles = updatedBubbles.filter(
       (bubble) =>
         !connectedBubbles.some(
-          (connected) =>
-            connected.x === bubble.x && connected.y === bubble.y
+          (connected) => connected.x === bubble.x && connected.y === bubble.y
         )
     );
 
@@ -487,8 +528,7 @@ export const handleBubblePlacement = (
     const finalBubbles = remainingBubbles.filter(
       (bubble) =>
         !floatingBubbles.some(
-          (floating) =>
-            floating.x === bubble.x && floating.y === bubble.y
+          (floating) => floating.x === bubble.x && floating.y === bubble.y
         )
     );
 
@@ -506,7 +546,6 @@ export const handleBubblePlacement = (
     };
   }
 };
-
 
 export interface ColorStats {
   color: string;
@@ -534,14 +573,14 @@ export class ScoringSystem {
     this.stats = {
       totalPoints: 0,
       totalBubblesPopped: 0,
-      creatorBubblesPopped : [],
-      colorStats: COLORS.map(color => ({
+      creatorBubblesPopped: [],
+      colorStats: COLORS.map((color) => ({
         color,
         count: 0,
-        points: 0
+        points: 0,
       })),
       lastHitColor: null,
-      lastHitTime: 0
+      lastHitTime: 0,
     };
   }
 
@@ -549,25 +588,27 @@ export class ScoringSystem {
    * Add points for popped bubbles
    */
   addPoints(bubbles: Bubble[]): number {
-    let points=0;
+    let points = 0;
     console.log(bubbles);
-    bubbles.map(bubble => {
-      console.log("The bubble is",bubble)
+    bubbles.map((bubble) => {
+      console.log("The bubble is", bubble);
       points += bubble.color === BALL_BLACK ? 100 : 10;
       this.stats.totalPoints += bubble.color === BALL_BLACK ? 100 : 10;
       this.stats.totalBubblesPopped += 1;
-      if(bubble.color === BALL_BLACK && bubble.creator){
+      if (bubble.color === BALL_BLACK && bubble.creator) {
         this.stats.creatorBubblesPopped.push({
           creatorPfp: bubble.creator?.coinAddress,
-          points: 100
-        })
-      const colorStat = this.stats.colorStats.find(stat => stat.color === bubble.color);
-      if (colorStat) {
+          points: 100,
+        });
+        const colorStat = this.stats.colorStats.find(
+          (stat) => stat.color === bubble.color
+        );
+        if (colorStat) {
           colorStat.count += 1;
           colorStat.points += 10;
+        }
       }
-    }
-    })
+    });
     if (bubbles.length > 0) {
       this.stats.lastHitColor = bubbles[0].color;
       this.stats.lastHitTime = Date.now();
@@ -607,14 +648,14 @@ export class ScoringSystem {
     this.stats = {
       totalPoints: 0,
       totalBubblesPopped: 0,
-      colorStats: COLORS.map(color => ({
+      colorStats: COLORS.map((color) => ({
         color,
         count: 0,
-        points: 0
+        points: 0,
       })),
       creatorBubblesPopped: [],
       lastHitColor: null,
-      lastHitTime: 0
+      lastHitTime: 0,
     };
   }
 
@@ -628,14 +669,17 @@ export class ScoringSystem {
       creatorBubblesPopped: this.getCreatorBubblesPopped(),
       topColor: this.getMostPopularColor(),
       lastHitColor: this.stats.lastHitColor,
-      timeSinceLastHit: this.stats.lastHitTime ? Date.now() - this.stats.lastHitTime : null
+      timeSinceLastHit: this.stats.lastHitTime
+        ? Date.now() - this.stats.lastHitTime
+        : null,
     };
   }
 }
 
-
 export const formatTime = (seconds: number) => {
   const minutes = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  return `${minutes.toString().padStart(2, "0")}:${secs
+    .toString()
+    .padStart(2, "0")}`;
 };

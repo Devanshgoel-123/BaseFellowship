@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import './style.scss';
-import { ScoringSystem } from '~/lib/functions';
-import { randomCreators } from '~/Services/creator';
+import React, { useEffect, useState } from "react";
+import "./style.scss";
+import { ScoringSystem } from "~/lib/functions";
+import { randomCreators } from "~/Services/creator";
 
 interface ScoreBoardProps {
   onClose: () => void;
@@ -13,7 +13,13 @@ interface ScoreBoardProps {
   scoringSystem: ScoringSystem;
 }
 
-const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onReplay, scoringSystem }) => {
+export const ScoreBoard: React.FC<ScoreBoardProps> = ({
+  onClose,
+  onHome,
+  onShare,
+  onReplay,
+  scoringSystem,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -24,7 +30,6 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
 
     return () => clearTimeout(timer);
   }, []);
-
 
   const handleHome = () => {
     setIsVisible(false);
@@ -43,22 +48,24 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
       onReplay();
     }, 300);
   };
- 
-  const filterCoins=Object.values(
-    scoringSystem.getCreatorBubblesPopped().reduce(
-      (acc: Record<string, { creatorPfp: string; points: number }>, item) => {
-        const key = item.creatorPfp.toLowerCase();
-        if (!acc[key]) {
-          acc[key] = { creatorPfp: item.creatorPfp, points: 0 };
-        }
-        acc[key].points += item.points;
-        return acc;
-      },
-      {}
-    )
-  )
+
+  const filterCoins = Object.values(
+    scoringSystem
+      .getCreatorBubblesPopped()
+      .reduce(
+        (acc: Record<string, { creatorPfp: string; points: number }>, item) => {
+          const key = item.creatorPfp.toLowerCase();
+          if (!acc[key]) {
+            acc[key] = { creatorPfp: item.creatorPfp, points: 0 };
+          }
+          acc[key].points += item.points;
+          return acc;
+        },
+        {}
+      )
+  );
   return (
-    <div className={`scoreboard-container ${isVisible ? 'visible' : ''}`}>
+    <div className={`scoreboard-container ${isVisible ? "visible" : ""}`}>
       <div className="blur-background"></div>
       <div className="scoreboard">
         {/* Roll Top */}
@@ -72,12 +79,6 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
           src="/assets/score_board/Level.png"
           className="level"
           alt="Level indicator"
-        />
-        {/* Roll Bottom */}
-        <img
-          src="/assets/score_board/Roll_bottom.png"
-          className="roll-bottom"
-          alt="Roll bottom decoration"
         />
         <div className="content-container">
           {/* Base SVG */}
@@ -94,13 +95,18 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
           />
           {/* Information Area */}
           <div className="info-area">
-            <div className="info-content" style={{
-              "marginTop": filterCoins.length > 2 ? "100px" : "120px"
-            }}>
+            <div
+              className="info-content"
+              style={{
+                marginTop: filterCoins.length > 2 ? "100px" : "120px",
+              }}
+            >
               {/* Score Section */}
               <div className="score-section">
                 <span className="label">Your Score : </span>
-                <span className="value">{scoringSystem.getStats().totalPoints}</span>
+                <span className="value">
+                  {scoringSystem.getStats().totalPoints}
+                </span>
               </div>
               {/* Creator Coin Section */}
               <div className="creator-coin-section">
@@ -116,30 +122,33 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
               <div className="coin-grid">
                 <div className="grid-label">Value : </div>
                 <div className="coin-values">
-                  {filterCoins
-                    .slice(0, 4) // 👉 only take max 4 creators
-                    .map((creator, index) => {
-                      const creatorData = randomCreators.find(
-                        (item) => item.coinAddress.toLowerCase() === creator.creatorPfp.toLowerCase()
-                      );
+                  {filterCoins.slice(0, 2).map((creator, index) => {
+                    const creatorData = randomCreators.find(
+                      (item) =>
+                        item.coinAddress.toLowerCase() ===
+                        creator.creatorPfp.toLowerCase()
+                    );
 
-                      return (
-                        <div key={index} className="coin-item">
-                          <div className="coin-value-row">
-                            <img
-                              src={creatorData?.pfp}
-                              alt={creator.creatorPfp}
-                              className="coin-icon"
-                            />
-                            <div className="coin-amount">{(creator.points * 100)}</div>
+                    return (
+                      <div key={index} className="coin-item">
+                        <div className="coin-value-row">
+                          <img
+                            src={creatorData?.pfp}
+                            alt={creator.creatorPfp}
+                            className="coin-icon"
+                          />
+                          <div className="coin-amount">
+                            {creator.points * 100}
                           </div>
-                          <div className="coin-name">{creatorData?.displayName}</div>
                         </div>
-                      );
-                    })}
+                        <div className="coin-name">
+                          {creatorData?.displayName}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-
             </div>
           </div>
           {/* buttons section */}
@@ -164,5 +173,3 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({ onClose, onHome, onShare, onRep
     </div>
   );
 };
-
-export default ScoreBoard;

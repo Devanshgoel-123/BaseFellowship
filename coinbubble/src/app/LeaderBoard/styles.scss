@@ -89,6 +89,7 @@
       overflow: auto;
       gap: 10px;
       padding-block: 20px;
+      min-height: 75%;
 
       .userData {
         display: flex;
@@ -116,12 +117,12 @@
           display: flex;
           border: 1px solid #e6e6e6;
         }
-        .userProfile{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: center;
-            width: 20%;
+        .userProfile {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          width: 20%;
         }
         .userPoints {
           display: flex;

@@ -41,7 +41,8 @@
   width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   z-index: 1000; /* Ensure it appears above other content */
 }

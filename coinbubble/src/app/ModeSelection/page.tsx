@@ -46,8 +46,8 @@ export default function ModeSelection() {
   };
 
   const handleStartGame = () => {
-    useGameStore.getState().setGameOn(true)
-    useGameStore.getState().setGameOver(false)
+    useGameStore.getState().setGameOn(true);
+    useGameStore.getState().setGameOver(false);
     setShowStartScreen(false);
     router.push("/game");
   };
@@ -58,18 +58,18 @@ export default function ModeSelection() {
 
   const Buttons = [
     {
-      name: "Creator",
-      text: "Lock your tokens, climb the leaderboard. let players mint your coin.",
-      link: "/AddSocials",
-      src: "/assets/selectMode/controller.svg",
-      onClick: handleCreatorClick,
-    },
-    {
       name: "Player",
       text: "Play the game and compete for high scores",
       link: "/game",
       src: "/assets/selectMode/controller.svg",
       onClick: handlePlayerClick,
+    },
+    {
+      name: "Creator",
+      text: "Lock your tokens, climb the leaderboard. let players mint your coin.",
+      link: "/AddSocials",
+      src: "/assets/selectMode/controller.svg",
+      onClick: handleCreatorClick,
     },
   ];
 
@@ -77,7 +77,7 @@ export default function ModeSelection() {
     <div className="relative w-full h-screen overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(94.6%_54.54%_at_50%_50%,#35A5F7_0%,#152E92_100%)]">
         {/* Content */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-start pt-[120px] px-8 bg-[url('/assets/backgrounds/gameMode.svg')] bg-cover bg-center">
+        <div className="relative z-10 h-full flex flex-col items-center justify-center px-8 bg-[url('/assets/backgrounds/gameMode.svg')] bg-cover bg-center">
           <h1 className="ModeText">Choose Your Mode</h1>
 
           <div className="w-[90vw] space-y-6 mt-10 flex flex-col gap-10">
@@ -113,15 +113,15 @@ export default function ModeSelection() {
       {showStartScreen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
             onClick={handleCloseStartScreen}
           />
-          
+
           {/* Start Screen Content */}
           <div className="relative z-60 w-full h-full">
             <StartScreen onStart={handleStartGame} />
-            
+
             {/* Optional Close Button */}
             <button
               onClick={handleCloseStartScreen}

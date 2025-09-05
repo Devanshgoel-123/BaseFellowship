@@ -124,7 +124,7 @@ export default function HomePage() {
         </div>
 
         {/* Game title - responsive sizing */}
-        <div className="absolute w-[400px] h-[220px] mt-[100px] sm:w-[250px] sm:h-[130px] md:w-[300px] md:h-[160px] lg:w-[378px] lg:h-[202.73px] left-1/2 -translate-x-1/2 top-[180px] sm:top-[220px] md:top-[260px] lg:top-[324px]">
+        <div className="absolute w-[350px] h-[210px] mt-[100px] sm:w-[250px] sm:h-[130px] md:w-[300px] md:h-[160px] lg:w-[378px] lg:h-[202.73px] left-1/2 -translate-x-1/2 top-[180px] sm:top-[220px] md:top-[260px] lg:top-[324px]">
           <img
             src={NAME_IMAGE}
             alt="Bubble Shooter"

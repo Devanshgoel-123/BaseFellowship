@@ -9,14 +9,14 @@ import { getRandomColor } from "~/lib/utils";
 import { initializeBubbles } from "~/lib/functions";
 import { ScoringSystem } from "~/lib/functions";
 import { formatTime } from "~/lib/functions";
-import ScoreBoard from "~/components/ScoreBoard"; // Adjust the import path as needed
+import { ScoreBoard } from "~/components/ScoreBoard";
+// Adjust the import path as needed
 import "./styles.scss";
 import { updateUserGameHistory } from "~/Services/user";
 import { useAccount } from "wagmi";
 import { GAME_DURATION } from "~/lib/constants";
 import { promise } from "zod/v4";
 import Link from "next/link";
-
 
 const GameCanvas = dynamicImport(
   () => import("~/components/GameCanvas").then((mod) => mod.default),
@@ -74,7 +74,7 @@ export default function GamePage() {
     setTimer(null);
     useGameStore.getState().setGameOn(false);
     useGameStore.getState().setGameOver(true);
-    
+
     // Add a 1-second delay before showing the ScoreBoard
     setTimeout(() => {
       setShowScoreBoard(true);
@@ -116,7 +116,7 @@ export default function GamePage() {
     try {
       // Reset scoring system
       scoringSystem.current = new ScoringSystem();
-      
+
       setGameState("playing");
       setScore(0);
       setTimer(GAME_DURATION);
@@ -143,24 +143,24 @@ export default function GamePage() {
   };
 
   const handleScoreBoardHome = () => {
-    router.push('/');
+    router.push("/");
   };
 
   const handleScoreBoardShare = () => {
     // Implement share functionality
     const gameStats = scoringSystem.current.getStats();
     const shareText = `I just scored ${gameStats.totalPoints} points in the bubble game! 🎮`;
-    
+
     if (navigator.share) {
       navigator.share({
-        title: 'Bubble Game Score',
+        title: "Bubble Game Score",
         text: shareText,
         url: window.location.origin,
       });
     } else {
       // Fallback for browsers that don't support native sharing
       navigator.clipboard.writeText(`${shareText} ${window.location.origin}`);
-      alert('Score copied to clipboard!');
+      alert("Score copied to clipboard!");
     }
   };
 
@@ -176,8 +176,12 @@ export default function GamePage() {
       <div className="userScore fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm p-4">
         <div className="flex justify-between items-center max-w-md mx-auto">
           <div className="flex items-center space-x-2">
-            <span className="score-label text-white font-semibold">Points:</span>
-            <span className="score-value text-white font-bold text-lg">{score}</span>
+            <span className="score-label text-white font-semibold">
+              Points:
+            </span>
+            <span className="score-value text-white font-bold text-lg">
+              {score}
+            </span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="timer-label text-white font-semibold">Timer</span>
@@ -207,13 +211,13 @@ export default function GamePage() {
 
       {useGameStore.getState().isGameOver && showScoreBoard && (
         <div className="absolute inset-0 z-50">
-        <ScoreBoard
-          onClose={handleScoreBoardClose}
-          onHome={handleScoreBoardHome}
-          onShare={handleScoreBoardShare}
-          onReplay={handleScoreBoardReplay}
-          scoringSystem={scoringSystem.current}
-        />
+          <ScoreBoard
+            onClose={handleScoreBoardClose}
+            onHome={handleScoreBoardHome}
+            onShare={handleScoreBoardShare}
+            onReplay={handleScoreBoardReplay}
+            scoringSystem={scoringSystem.current}
+          />
         </div>
       )}
     </div>
