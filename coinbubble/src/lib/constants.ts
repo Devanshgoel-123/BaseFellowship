@@ -46,7 +46,7 @@ export const APP_TAGS: string[] = ['neynar', 'starter-kit', 'demo'];
  * URL for the app's icon image.
  * Used in app store listings and UI elements.
  */
-export const APP_ICON_URL: string = `${APP_URL}/icon.png`;
+export const APP_ICON_URL: string = `${APP_URL}/app_icon.jpg`;
 
 /**
  * URL for the app's Open Graph image.
@@ -190,7 +190,7 @@ export const MEDALS = {
   3: BRONZE_MEDAL,
 } as const;
 
-export const NAME_IMAGE="/assets/prop/name.png";
+export const NAME_IMAGE="/assets/prop/bubb_banger.svg";
 export const GLOBE="/assets/profile/globe.svg";
 export const LOCAL="/assets/profile/cube.svg";
 export const POINTS="/assets/profile/icon.svg";
