@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 import { Creator } from "~/lib/bubbleType";
 dotenv.config();
 const BASE_CREATOR_URL =
-  process.env.BACKEND_URL || "http://localhost:8080/api/v1";
+  process.env.BACKEND_URL ||
+  "https://basefellowship-production.up.railway.app/api/v1";
 
 export const getCreatorProfile = async ({
   creatorAddress,
@@ -95,7 +96,7 @@ export const randomCreators: Creator[] = [
     createdAt: new Date("2025-08-17 17:31:05.340003"),
     coinAddress: "0xea71a08bb70a19538473c43a6c4fa7912ad077fe",
     pfp: "https://ik.imagekit.io/0fb6jryix/Group%2044.png?updatedAt=1755443034371",
-    message: "Bullish on Devansh!!",
+    message: "Bullish on FBI!!",
   },
   {
     id: 7,
@@ -105,6 +106,6 @@ export const randomCreators: Creator[] = [
     createdAt: new Date("2025-08-17 17:32:19.618019"),
     coinAddress: "0xb39ed36589a3508ad8a78e170551a26c7dfecb2e",
     pfp: "https://ik.imagekit.io/0fb6jryix/shukla.jpg?updatedAt=1755443086720",
-    message: "You got awarded 1000 Shukla Tokens!!",
+    message: "You Got Rewarded OnChain!!",
   },
 ];

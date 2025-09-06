@@ -1,36 +1,37 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import "./styles.scss";
-import Image from 'next/image';
-import { MEDALS } from '~/lib/constants';
-import { getUserLeaderBoard } from '~/Services/user';
-import {motion} from 'framer-motion';
+import Image from "next/image";
+import { MEDALS } from "~/lib/constants";
+import { getUserLeaderBoard } from "~/Services/user";
+import { motion } from "framer-motion";
 export interface LeaderboardUser {
   id: number;
   username: string;
   walletAddress: string;
   userPfp: string;
   points: number;
-  createdAt: string; 
+  createdAt: string;
 }
 
 export default function Leaderboard() {
-  const [activeTab, setActiveTab] = useState('weekly');
+  const [activeTab, setActiveTab] = useState("weekly");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [leaderboardUserData, setLeaderboardUserData] = useState<LeaderboardUser[]>([]);
+  const [leaderboardUserData, setLeaderboardUserData] = useState<
+    LeaderboardUser[]
+  >([]);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const duration = activeTab === 'weekly' ? 'weekly' : 'allTime';
+      const duration = activeTab === "weekly" ? "weekly" : "allTime";
       setLeaderboardUserData([]);
-      const leaderboard = await getUserLeaderBoard(duration)
-      console.log("The leaderboard data is", leaderboard);
-    
+      const leaderboard = await getUserLeaderBoard(duration);
+
       setLeaderboardUserData(leaderboard.leaderboard);
-    }
+    };
     fetchLeaderboard();
   }, [activeTab]);
 
@@ -41,12 +42,12 @@ export default function Leaderboard() {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-//menuOpen
+  //menuOpen
   return (
     <div className="LeaderBoardWrapper">
       <div className="LeaderBoardContainer">
@@ -55,61 +56,78 @@ export default function Leaderboard() {
           {/* <span onClick={() => router.back()}  className='backIcon'>
             <GoArrowLeft />
           </span> */}
-          <span>
-            Leaderboard
-          </span>
+          <span>Leaderboard</span>
         </div>
-        <div className='LeaderBoardTab'>
-          <div className={`LeaderBoardTabItem ${activeTab === 'weekly' ? 'active' : ''}`} onClick={() => { setActiveTab('weekly') }}>
+        <div className="LeaderBoardTab">
+          <div
+            className={`LeaderBoardTabItem ${
+              activeTab === "weekly" ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveTab("weekly");
+            }}
+          >
             <span>Weekly</span>
           </div>
-          <div className={`LeaderBoardTabItem ${activeTab === 'allTime' ? 'active' : ''}`} onClick={() => { setActiveTab('allTime') }}>
+          <div
+            className={`LeaderBoardTabItem ${
+              activeTab === "allTime" ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveTab("allTime");
+            }}
+          >
             <span>All Time</span>
           </div>
         </div>
-       {leaderboardUserData.length > 0 ?  <motion.div
+        {leaderboardUserData.length > 0 ? (
+          <motion.div
             className="LeaderContainer"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-          {leaderboardUserData.map((item, index) => (
-            <motion.div
-              key={item.id}
-              className="userData"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            transition={{ duration: 0.1*index }}
-            >
-              <div className="rank">
-                {index + 1}
-              </div>
-              <div className="userProfile">
-                <Image
-                  src={item.userPfp}
-                  height={35}
-                  width={35}
-                  alt={item.username}
-                  className='logo'
-                />
-              </div>
-              <div className="userPoints">
-                <span> {item.username.slice(0, 1).toUpperCase() + item.username.slice(1)} </span>
-                <span>{item.points} points</span>
-              </div>
-              {MEDALS[index + 1 as keyof typeof MEDALS] && <div className="medal">
-                <Image
-                  src={MEDALS[index + 1 as keyof typeof MEDALS]}
-                  height={20}
-                  width={20}
-                  alt="medal"
-                  className="medalLogo"
-                />
-              </div>}
-            </motion.div>
-          ))}
-
-</motion.div>: null}
+            {leaderboardUserData.map((item, index) => (
+              <motion.div
+                key={item.id}
+                className="userData"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.1 * index }}
+              >
+                <div className="rank">{index + 1}</div>
+                <div className="userProfile">
+                  <Image
+                    src={item.userPfp}
+                    height={35}
+                    width={35}
+                    alt={item.username}
+                    className="logo"
+                  />
+                </div>
+                <div className="userPoints">
+                  <span>
+                    {" "}
+                    {item.username.slice(0, 1).toUpperCase() +
+                      item.username.slice(1)}{" "}
+                  </span>
+                  <span>{item.points} points</span>
+                </div>
+                {MEDALS[(index + 1) as keyof typeof MEDALS] && (
+                  <div className="medal">
+                    <Image
+                      src={MEDALS[(index + 1) as keyof typeof MEDALS]}
+                      height={20}
+                      width={20}
+                      alt="medal"
+                      className="medalLogo"
+                    />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : null}
       </div>
     </div>
   );

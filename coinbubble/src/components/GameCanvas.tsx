@@ -1,11 +1,15 @@
-'use client';
+"use client";
 import { useRef, useCallback, useEffect, useState } from "react";
 import { Bubble, ShootingBubble, GameState } from "~/lib/bubbleType";
 import { BUBBLE_RADIUS, SHOOT_SPEED } from "~/lib/constants";
 import { addNewRowAtTop } from "~/lib/functions";
 import { getRandomColor } from "~/lib/utils";
 import { calculateAimAngle, createShootingBubble } from "~/lib/functions";
-import { renderBackground, checkDeathLine, renderDeathLine } from "~/lib/functions";
+import {
+  renderBackground,
+  checkDeathLine,
+  renderDeathLine,
+} from "~/lib/functions";
 import { renderBubble } from "~/components/BubbleRenderer";
 import { renderShooter } from "./ShooterRenderer";
 import { renderHitAnimation } from "./HitAnimationRenderer";
@@ -16,7 +20,6 @@ import { findFloatingBubbles } from "~/lib/functions";
 import { GoldenBubblePopup } from "./PopUpPfp";
 import { useGameStore } from "~/store/gameStats";
 import "./styles.scss";
-
 
 interface GameCanvasProps {
   bubbles: Bubble[];
@@ -43,7 +46,7 @@ export default function GameCanvas({
   setGameState,
   onBubblesPopped,
   onGameOver,
-  scoringSystem
+  scoringSystem,
 }: GameCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
@@ -78,20 +81,16 @@ export default function GameCanvas({
   const getCanvasDimensions = useCallback(() => {
     const isMobile = window.innerWidth < 768;
     const isTablet = window.innerWidth >= 768 && window.innerWidth < 1024;
-    
-    console.log("The height of the screen is ", window.innerHeight);
-    
+
     // Mobile-first responsive dimensions
     if (isMobile) {
       const height = window.innerHeight * 0.9; // Slightly smaller for mobile UI
-      console.log("Mobile canvas height:", height);
       return {
         width: window.innerWidth,
         height: height,
       };
     } else if (isTablet) {
       const height = Math.min(window.innerHeight * 0.95, 1024);
-      console.log("Tablet canvas height:", height);
       return {
         width: Math.min(window.innerWidth, 768),
         height: height,
@@ -99,7 +98,6 @@ export default function GameCanvas({
     } else {
       // Desktop
       const height = window.innerHeight * 0.95;
-      console.log("Desktop canvas height:", height);
       return {
         width: Math.min(window.innerWidth, 1200),
         height: height,
@@ -107,20 +105,13 @@ export default function GameCanvas({
     }
   }, []);
 
-
   const handleAddNewRow = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const currentBubbles = bubblesRef.current;
-    console.log("Adding new row - Current bubbles:", currentBubbles.length);
-    console.log("Bubble Y positions before:", currentBubbles.map(b => ({ y: b.y, row: b.row })).slice(0, 5));
-    
+
     const newBubbles = addNewRowAtTop(currentBubbles, canvas.width);
-    
-    console.log("Bubble Y positions after:", newBubbles.map(b => ({ y: b.y, row: b.row })).slice(0, 5));
-    console.log("New total bubbles:", newBubbles.length);
-    
     setBubbles(newBubbles);
   }, [setBubbles]);
 
@@ -210,9 +201,6 @@ export default function GameCanvas({
     const dimensions = getCanvasDimensions();
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
-    
-    console.log("Canvas dimensions set:", dimensions);
-    console.log("Death line will be at Y:", dimensions.height - 60);
 
     const animate = () => {
       const currentBubbles = bubblesRef.current;
@@ -225,11 +213,6 @@ export default function GameCanvas({
       // Check death line every frame
       const deathLineReached = checkDeathLine(currentBubbles, canvas.height);
       if (deathLineReached && currentGameState === "playing") {
-        console.log("Game Over triggered - Death line reached");
-        console.log("Canvas height:", canvas.height);
-        console.log("Death line Y:", canvas.height - 60);
-        console.log("Bubbles at death line:", currentBubbles.filter(bubble => (bubble.y + 25) >= (canvas.height - 60)));
-        console.log("Current game state:", currentGameState);
         setGameState("gameOver");
         // Also update the global game store
         useGameStore.getState().setGameOn(false);
@@ -243,15 +226,15 @@ export default function GameCanvas({
         renderBubble({ bubble, ctx });
       });
 
-        renderShooter({
-          ctx,
-          width: canvas.width,
-          height: canvas.height,
-          nextBubbleColor,
-          aimAngle: aimAngleRef.current,
-          shootingBubble: currentShootingBubble,
-          gameState: currentGameState,
-        });
+      renderShooter({
+        ctx,
+        width: canvas.width,
+        height: canvas.height,
+        nextBubbleColor,
+        aimAngle: aimAngleRef.current,
+        shootingBubble: currentShootingBubble,
+        gameState: currentGameState,
+      });
       renderHitAnimation({ ctx, hitPopup });
 
       if (currentShootingBubble) {
@@ -267,27 +250,36 @@ export default function GameCanvas({
           newShootingBubble.dx *= -1;
         }
 
-        const { collision, newX, newY, shouldBounce, creatorHit, creatorBubble } = checkCollision({
+        const {
+          collision,
+          newX,
+          newY,
+          shouldBounce,
+          creatorHit,
+          creatorBubble,
+        } = checkCollision({
           shootingBubble: newShootingBubble,
           bubbles: currentBubbles,
           canvasWidth: canvas.width,
           canvasHeight: canvas.height,
         });
-       
 
         if (shouldBounce) {
           setShootingBubble(newShootingBubble);
         } else if (collision) {
           if (creatorHit && creatorBubble !== null) {
-            let updatedBubbles = currentBubbles.filter(bubble => 
-              !(bubble.x === creatorBubble.x && bubble.y === creatorBubble.y)
+            let updatedBubbles = currentBubbles.filter(
+              (bubble) =>
+                !(bubble.x === creatorBubble.x && bubble.y === creatorBubble.y)
             );
             const floatingBubbles = findFloatingBubbles(updatedBubbles);
-            updatedBubbles = updatedBubbles.filter(bubble => 
-              !floatingBubbles.some(floating => 
-                floating.x === bubble.x && floating.y === bubble.y
-              )
-            )
+            updatedBubbles = updatedBubbles.filter(
+              (bubble) =>
+                !floatingBubbles.some(
+                  (floating) =>
+                    floating.x === bubble.x && floating.y === bubble.y
+                )
+            );
             onBubblesPopped([creatorBubble]);
             setBubbles(updatedBubbles);
             setCreatorBubble(creatorBubble);
@@ -298,32 +290,35 @@ export default function GameCanvas({
             }
             setShootingBubble(null);
           } else {
-          const { updatedBubbles, connectedBubbles} = handleBubblePlacement(
-            newShootingBubble,
-            currentBubbles,
-            newX,
-            newY
-          );
+            const { updatedBubbles, connectedBubbles } = handleBubblePlacement(
+              newShootingBubble,
+              currentBubbles,
+              newX,
+              newY
+            );
 
-          if (connectedBubbles.length >= 3) {
-            setBubbles(updatedBubbles);
-            onBubblesPopped(connectedBubbles);
-            showHitAnimation(connectedBubbles.length, newX, newY);
+            if (connectedBubbles.length >= 3) {
+              setBubbles(updatedBubbles);
+              onBubblesPopped(connectedBubbles);
+              showHitAnimation(connectedBubbles.length, newX, newY);
 
-            if (updatedBubbles.length === 0) {
-              setGameState("won");
+              if (updatedBubbles.length === 0) {
+                setGameState("won");
+              }
+            } else {
+              // No bubbles popped, add new row
+              setBubbles(updatedBubbles);
+              setPendingNewRow(true);
             }
-          } else {
-            // No bubbles popped, add new row
-            setBubbles(updatedBubbles);
-            setPendingNewRow(true);
-          }
 
-          setShootingBubble(null);
-        }
+            setShootingBubble(null);
+          }
         } else {
           setShootingBubble(newShootingBubble);
-          renderBubble({ bubble: { ...newShootingBubble, row: 0, col: 0 }, ctx });
+          renderBubble({
+            bubble: { ...newShootingBubble, row: 0, col: 0 },
+            ctx,
+          });
         }
       }
 
@@ -379,7 +374,7 @@ export default function GameCanvas({
     const handleTouchStart = (e: TouchEvent) => {
       e.preventDefault();
       // Optional: Add haptic feedback for mobile
-      if ('vibrate' in navigator) {
+      if ("vibrate" in navigator) {
         navigator.vibrate(50);
       }
     };
@@ -401,18 +396,19 @@ export default function GameCanvas({
 
   return (
     <>
-    <div className="canvasContainer w-full h-full flex items-center justify-center">
-      <canvas
-        ref={canvasRef}
-        className="gameCanvas w-full h-full touch-none select-none"
-        style={{ touchAction: "none"}}
-      />
-      {showCreatorPopup && creatorBubble?.creator && (
-      <GoldenBubblePopup pfpSrc={creatorBubble.creator.pfp} message={creatorBubble.creator.message}/>
-    )}
-    </div>
-    
+      <div className="canvasContainer w-full h-full flex items-center justify-center">
+        <canvas
+          ref={canvasRef}
+          className="gameCanvas w-full h-full touch-none select-none"
+          style={{ touchAction: "none" }}
+        />
+        {showCreatorPopup && creatorBubble?.creator && (
+          <GoldenBubblePopup
+            pfpSrc={creatorBubble.creator.pfp}
+            message={creatorBubble.creator.message}
+          />
+        )}
+      </div>
     </>
-    
   );
 }

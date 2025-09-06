@@ -142,8 +142,7 @@ export async function initializeBubbles(): Promise<Bubble[]> {
       const y = row * (BUBBLE_RADIUS * 1.7) + BUBBLE_RADIUS;
 
       if (row === adjustedRows - 1) {
-        // Log bottom row positions
-        console.log(`Bottom row ${row}, col ${col}: x=${x}, y=${y}`);
+        // Log bottom row position
       }
 
       newBubbles.push(generateRandomBubble(x, y, row, col));
@@ -156,14 +155,12 @@ export async function initializeBubbles(): Promise<Bubble[]> {
     selectedIndices.add(randomIndex);
   }
   const randomCreators = await getRandomCreators();
-  console.log("randomCreators", randomCreators);
   selectedIndices.forEach((index) => {
     const bubble = newBubbles[index];
     bubble.color = BALL_BLACK;
     bubble.creator =
       randomCreators[Math.floor(Math.random() * randomCreators.length)];
   });
-  console.log("newBubbles", newBubbles);
   return newBubbles;
 }
 
@@ -460,7 +457,6 @@ export const checkCollision = ({
       collision = true;
       collisionBubble = bubble;
       if (bubble.color === BALL_BLACK) {
-        console.log("🎯 You hit the creator bubble!", bubble);
         creatorHit = true;
         creatorBubble = bubble;
       }
@@ -589,9 +585,7 @@ export class ScoringSystem {
    */
   addPoints(bubbles: Bubble[]): number {
     let points = 0;
-    console.log(bubbles);
     bubbles.map((bubble) => {
-      console.log("The bubble is", bubble);
       points += bubble.color === BALL_BLACK ? 100 : 10;
       this.stats.totalPoints += bubble.color === BALL_BLACK ? 100 : 10;
       this.stats.totalBubblesPopped += 1;

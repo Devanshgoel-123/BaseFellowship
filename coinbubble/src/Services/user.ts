@@ -1,8 +1,10 @@
 import axios from "axios";
-import { USER_ADDRESS } from "~/lib/constants";
 import dotenv from "dotenv";
 dotenv.config();
-const BASE_USER_URL = process.env.BACKEND_URL || "http://localhost:8080/api/v1";
+console.log(process.env.BACKEND_URL);
+const BASE_USER_URL =
+  process.env.BACKEND_URL ||
+  "https://basefellowship-production.up.railway.app/api/v1";
 
 /**
  * Register a new user

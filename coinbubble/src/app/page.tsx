@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
+import { Connector } from "wagmi";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BackgroundBubbles } from "~/components/BottomBubbles";
@@ -51,35 +51,43 @@ export default function HomePage() {
   const handleWalletConnect = async () => {
     try {
       console.log("Available connectors:", connectors);
-      
-      // Find the best available connector
-      let selectedConnector = null;
-      
-      // Priority order: MetaMask, Coinbase Wallet, Farcaster Frame
-      if (connectors.length > 0) {
-        // Try MetaMask first (usually index 2)
-        if (connectors.length > 2 && connectors[2]?.name?.toLowerCase().includes('metamask')) {
-          selectedConnector = connectors[2];
-        }
-        // Try Coinbase Wallet (usually index 1)
-        else if (connectors.length > 1 && connectors[1]?.name?.toLowerCase().includes('coinbase')) {
-          selectedConnector = connectors[1];
-        }
-        // Fallback to first available connector
-        else if (connectors[0]) {
-          selectedConnector = connectors[0];
-        }
-      }
-      
-      if (!selectedConnector) {
-        console.error("No suitable wallet connector found");
-        alert("No wallet connector available. Please make sure you have MetaMask or Coinbase Wallet installed.");
+
+      if (connectors.length === 0) {
+        alert("No wallet connectors available.");
         return;
       }
-      
-      console.log("Connecting with:", selectedConnector.name);
-      await connect({ connector: selectedConnector });
-      
+
+      // Define priority order (functions to pick connector)
+      const priorityOrder: ((
+        cs: readonly Connector[]
+      ) => Connector | undefined)[] = [
+        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("metamask")),
+        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("farcaster")),
+        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("coinbase")),
+        (cs) => cs[0], // fallback to first available
+      ];
+
+      let connected: Connector | null = null;
+
+      for (const getConnector of priorityOrder) {
+        // ✅ Call the function to actually get the connector
+        const connector = getConnector(connectors);
+        if (!connector) continue;
+
+        try {
+          console.log(`🔍 Trying connector: ${connector.name}`);
+          await connect({ connector }); // connector is now the right type
+          console.log(`✅ Connected with ${connector.name}`);
+          connected = connector;
+          break;
+        } catch (err) {
+          console.warn(`❌ Failed with ${connector?.name}`, err);
+        }
+      }
+
+      if (!connected) {
+        throw new Error("No connectors could be used.");
+      }
     } catch (error) {
       console.error("Wallet connection failed:", error);
       alert("Failed to connect wallet. Please try again.");

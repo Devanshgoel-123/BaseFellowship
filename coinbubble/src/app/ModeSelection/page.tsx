@@ -96,7 +96,7 @@ export default function ModeSelection() {
                       alt="controller"
                     />
                   </div>
-                  <h2 className="absolute top-[35px] text-xl font-bold text-white gradient-text">
+                  <h2 className="absolute top-[45px] text-xl font-bold text-white gradient-text">
                     {item.name}
                   </h2>
                   <p className="gradient-sub-text">{item.text}</p>

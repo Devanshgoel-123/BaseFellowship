@@ -85,7 +85,6 @@ export default function GamePage() {
       userAddress: address as string,
       normalPoints: scoringSystem.current.getStats().totalPoints,
     });
-    console.log(result);
   }, [address]);
 
   useEffect(() => {
@@ -124,7 +123,6 @@ export default function GamePage() {
       await handleInitializeBubbles();
       useGameStore.getState().setGameOver(false);
       useGameStore.getState().setGameOn(true);
-      console.log("Game reset successfully");
     } catch (error) {
       console.error("Error resetting game:", error);
     }
@@ -143,7 +141,7 @@ export default function GamePage() {
   };
 
   const handleScoreBoardHome = () => {
-    router.push("/");
+    router.push("/ModeSelection");
   };
 
   const handleScoreBoardShare = () => {
@@ -165,7 +163,6 @@ export default function GamePage() {
   };
 
   const handleScoreBoardReplay = async () => {
-    console.log("Replay clicked from ScoreBoard");
     setShowScoreBoard(false);
     await resetGame();
   };

@@ -35,7 +35,7 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
     setIsVisible(false);
     setTimeout(() => {
       onHome();
-    }, 300);
+    }, 100);
   };
 
   const handleShare = () => {
