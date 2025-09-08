@@ -61,9 +61,7 @@ export default function HomePage() {
       const priorityOrder: ((
         cs: readonly Connector[]
       ) => Connector | undefined)[] = [
-        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("metamask")),
         (cs) => cs.find((c) => c?.name?.toLowerCase().includes("farcaster")),
-        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("coinbase")),
         (cs) => cs[0], // fallback to first available
       ];
 
@@ -76,7 +74,7 @@ export default function HomePage() {
 
         try {
           console.log(`🔍 Trying connector: ${connector.name}`);
-          await connect({ connector }); // connector is now the right type
+          await connect({ connector });
           console.log(`✅ Connected with ${connector.name}`);
           connected = connector;
           break;
