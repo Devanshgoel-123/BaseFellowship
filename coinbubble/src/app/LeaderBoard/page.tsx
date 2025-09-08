@@ -1,6 +1,4 @@
 "use client";
-
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import "./styles.scss";
 import Image from "next/image";
@@ -19,7 +17,6 @@ export interface LeaderboardUser {
 
 export default function Leaderboard() {
   const [activeTab, setActiveTab] = useState("weekly");
-  const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [leaderboardUserData, setLeaderboardUserData] = useState<
     LeaderboardUser[]
@@ -47,7 +44,7 @@ export default function Leaderboard() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  //menuOpen
+  //menuOpe
   return (
     <div className="LeaderBoardWrapper">
       <div className="LeaderBoardContainer">
