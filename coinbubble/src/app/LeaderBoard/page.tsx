@@ -6,6 +6,7 @@ import { MEDALS } from "~/lib/constants";
 import { getUserLeaderBoard } from "~/Services/user";
 import { motion } from "framer-motion";
 import { BottomNavbar } from "~/components/BottomNavbar";
+import { fa } from "zod/v4/locales";
 export interface LeaderboardUser {
   id: number;
   username: string;
@@ -18,6 +19,7 @@ export interface LeaderboardUser {
 export default function Leaderboard() {
   const [activeTab, setActiveTab] = useState("weekly");
   const menuRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [leaderboardUserData, setLeaderboardUserData] = useState<
     LeaderboardUser[]
   >([]);
