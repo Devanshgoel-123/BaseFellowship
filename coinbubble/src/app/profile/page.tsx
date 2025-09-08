@@ -1,6 +1,4 @@
 "use client";
-
-import { useRouter } from "next/navigation";
 import { useNeynarUser } from "~/hooks/useNeynarUser";
 import { useEffect, useRef, useState } from "react";
 import { BottomNavbar } from "~/components/BottomNavbar";
@@ -81,7 +79,7 @@ export default function ProfilePage() {
             className="profileLogo"
           />
           <div className="usernameWrapper">
-            <span>{userData?.username}</span>
+            <span>{userData?.username.slice(0, 15)}</span>
           </div>
           <div className="statsWrapper">
             <div className="statsItem">
@@ -98,8 +96,8 @@ export default function ProfilePage() {
               </span>
             </div>
           </div>
-          <div className="w-full mt-0 bg-gradient-to-b from-[#b3d7fe] via-[#6daafb] to-[#3853b9] rounded-2xl shadow px-0 pb-0 pt-0 border border-[#2955a5]">
-            <div className="flex gap-3 px-2 pt-4 w-full">
+          <div className="w-[95%] mt-0 bg-gradient-to-b from-[#b3d7fe] via-[#6daafb] to-[#3853b9] rounded-2xl shadow px-0 pb-0 pt-0 border border-[#2955a5]">
+            <div className="flex gap-3 px-2 py-4 w-[100%]">
               <button
                 className={`
       flex-1 font-bold px-5 py-2 transition text-base border-2
@@ -129,52 +127,11 @@ export default function ProfilePage() {
                 Collectibles
               </button>
             </div>
-
-            {/* <div className="px-4 py-5">
-                {activeTab === "balances" ? (
-                  <>
-                    <div className="mb-4">
-                      <h3 className="text-white text-lg font-bold">
-                        Holding {balances.length} coins
-                      </h3>
-                      <p className="text-sm text-white/90 font-normal">
-                        Low-volume coins may sell for less
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-4">
-                      {balances.map((balance) => (
-                        <div
-                          key={`${balance.contractAddress}-${balance.tokenId}`}
-                          className="flex items-center justify-between bg-gradient-to-r from-[#223b78] to-[#3c62db] rounded-2xl px-4 py-3"
-                        >
-                          <Avatar className="w-10 h-10 bg-[#e6ecfd] border border-[#82b3ff] text-xl font-bold">
-                            <AvatarFallback>
-                              {balance.metadata.name[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="ml-3">
-                            <div className="font-semibold text-white text-base">
-                              {balance.metadata.name}
-                            </div>
-                            <div className="text-xs text-blue-100">
-                              {parseInt(balance.balance).toLocaleString()}
-                            </div>
-                          </div>
-                          <div className="flex flex-col items-end ml-auto">
-                            <div className="font-bold text-[#5eefff] text-base">
-                              ${balance.usdValue.toFixed(2)}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-white py-10 text-center">
-                    No collectibles yet.
-                  </div>
-                )}
-              </div> */}
+            <div className="flex items-center justify-center bg-transparent my-[48%]">
+              <h1 className="text-4xl font-semibold text-gray-700">
+                Coming Soon
+              </h1>
+            </div>
           </div>
         </div>
       )}

@@ -56,7 +56,7 @@ export const getUserProfile = async (walletAddress: string) => {
       return null;
     }
   } catch (error) {
-    console.log("Error getting user profile", error);
+    console.log("Error getting user profile from farcaster");
     return null;
   }
 };

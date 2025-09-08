@@ -15,8 +15,6 @@ import "./styles.scss";
 import { updateUserGameHistory } from "~/Services/user";
 import { useAccount } from "wagmi";
 import { GAME_DURATION } from "~/lib/constants";
-import { promise } from "zod/v4";
-import Link from "next/link";
 
 const GameCanvas = dynamicImport(
   () => import("~/components/GameCanvas").then((mod) => mod.default),

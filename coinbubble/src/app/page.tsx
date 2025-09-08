@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import { BackgroundBubbles } from "~/components/BottomBubbles";
 import { useAccount, useConnect } from "wagmi";
 import { NAME_IMAGE } from "~/lib/constants";
-import { getUserProfile } from "~/Services/user";
 import sdk from "@farcaster/miniapp-sdk";
 export default function HomePage() {
   const router = useRouter();
@@ -33,25 +32,11 @@ export default function HomePage() {
   }, []);
 
   const handleStart = async () => {
-    try {
-      const user = await getUserProfile({
-        walletAddress: address as string,
-      });
-      if (user) {
-        router.push("/ModeSelection");
-      } else {
-        router.push("/profile");
-      }
-    } catch (error) {
-      console.log(error);
-    }
     router.push("/ModeSelection");
   };
 
   const handleWalletConnect = async () => {
     try {
-      console.log("Available connectors:", connectors);
-
       if (connectors.length === 0) {
         alert("No wallet connectors available.");
         return;
@@ -62,6 +47,8 @@ export default function HomePage() {
         cs: readonly Connector[]
       ) => Connector | undefined)[] = [
         (cs) => cs.find((c) => c?.name?.toLowerCase().includes("farcaster")),
+        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("metamask")),
+        (cs) => cs.find((c) => c?.name?.toLowerCase().includes("coinbase")),
         (cs) => cs[0], // fallback to first available
       ];
 
@@ -74,10 +61,12 @@ export default function HomePage() {
 
         try {
           console.log(`🔍 Trying connector: ${connector.name}`);
-          await connect({ connector });
-          console.log(`✅ Connected with ${connector.name}`);
-          connected = connector;
-          break;
+          await connect({ connector }); // connector is now the right type
+          if (address !== undefined) {
+            console.log(`✅ Connected with ${connector.name}`);
+            connected = connector;
+            break;
+          }
         } catch (err) {
           console.warn(`❌ Failed with ${connector?.name}`, err);
         }

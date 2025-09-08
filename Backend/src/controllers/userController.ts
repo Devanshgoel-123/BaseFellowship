@@ -86,19 +86,18 @@ export const GetUserProfile = async (req: Request, res: Response) => {
       const userDetails = await userFarcasterData(walletAddress as string);
       let name: string = "";
       let pfp: string = "";
-      if (userDetails.name !== "" && userDetails.pfp !== "") {
-        name = userDetails.name;
-        pfp = userDetails.pfp;
-        const user = await registerUser(name, walletAddress as string, pfp);
-        if (user) {
-          res.status(200).json({ user });
-        }
-      } else {
-        res.status(404).json({ message: "User not found" });
+      name = userDetails.name || walletAddress.toString();
+      pfp =
+        userDetails.pfp ||
+        "https://ik.imagekit.io/xnyu7djh7/Mask%20Group.svg?updatedAt=1757341623491";
+      const user = await registerUser(name, walletAddress as string, pfp);
+      console.log("The user is", user);
+      if (user) {
+        res.status(200).json({ user });
       }
     }
   } catch (error) {
-    console.log("Error getting user profile", error);
+    console.log("Error getting user profile");
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -114,7 +113,7 @@ export const UpdateUserGameHits = async (req: Request, res: Response) => {
       res.status(400).json({ message: "Failed to update user game hits" });
     }
   } catch (error) {
-    console.log("Error updating user game hits", error);
+    console.log("Error updating user game hits");
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -129,7 +128,7 @@ export const GetUserLeaderBoard = async (req: Request, res: Response) => {
       res.status(404).json({ message: "No leaderboard found" });
     }
   } catch (err) {
-    console.log("Error getting user leaderboard", err);
+    console.log("Error getting user leaderboard");
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -147,7 +146,7 @@ export const GetUserRewards = async (req: Request, res: Response) => {
       res.status(404).json({ message: "No rewards found" });
     }
   } catch (err) {
-    console.log("Error getting user rewards", err);
+    console.log("Error getting user rewards");
     res.status(500).json({ message: "Internal server error" });
   }
 };

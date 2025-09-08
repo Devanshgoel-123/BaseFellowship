@@ -93,6 +93,7 @@ export const updateUserGameHistory = async ({
  */
 export const getUserLeaderBoard = async (_duration: string) => {
   try {
+    console.log("The base user url is", BASE_USER_URL);
     const response = await axios.get(`${BASE_USER_URL}/users/leaderboard`);
     return response.data;
   } catch (error) {

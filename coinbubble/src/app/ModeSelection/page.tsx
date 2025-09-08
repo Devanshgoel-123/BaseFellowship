@@ -7,10 +7,13 @@ import "./styles.scss";
 import { BottomNavbar } from "~/components/BottomNavbar";
 import { StartScreen } from "~/components/StartScreen";
 import { useGameStore } from "~/store/gameStats";
+import { getUserProfile } from "~/Services/user";
+import { useAccount } from "wagmi";
 export const dynamic = "force-dynamic";
 
 export default function ModeSelection() {
   const router = useRouter();
+  const { address } = useAccount();
   const menuRef = useRef<HTMLDivElement>(null);
   const [showStartScreen, setShowStartScreen] = useState<boolean>(false);
 
@@ -37,7 +40,14 @@ export default function ModeSelection() {
     }
   }, []);
 
-  const handlePlayerClick = () => {
+  const handlePlayerClick = async () => {
+    try {
+      const user = await getUserProfile({
+        walletAddress: address as string,
+      });
+    } catch (error) {
+      console.log(error);
+    }
     setShowStartScreen(true);
   };
 

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { MEDALS } from "~/lib/constants";
 import { getUserLeaderBoard } from "~/Services/user";
 import { motion } from "framer-motion";
+import { BottomNavbar } from "~/components/BottomNavbar";
 export interface LeaderboardUser {
   id: number;
   username: string;
@@ -29,7 +30,6 @@ export default function Leaderboard() {
       const duration = activeTab === "weekly" ? "weekly" : "allTime";
       setLeaderboardUserData([]);
       const leaderboard = await getUserLeaderBoard(duration);
-
       setLeaderboardUserData(leaderboard.leaderboard);
     };
     fetchLeaderboard();
@@ -109,7 +109,7 @@ export default function Leaderboard() {
                   <span>
                     {" "}
                     {item.username.slice(0, 1).toUpperCase() +
-                      item.username.slice(1)}{" "}
+                      item.username.slice(1, 15)}{" "}
                   </span>
                   <span>{item.points} points</span>
                 </div>
@@ -129,6 +129,7 @@ export default function Leaderboard() {
           </motion.div>
         ) : null}
       </div>
+      <BottomNavbar />
     </div>
   );
 }
